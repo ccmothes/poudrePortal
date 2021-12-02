@@ -1,0 +1,42 @@
+
+/* Make selection labels bold*/
+label.control-label {
+        font-size: 15px;
+        font-weight: bold;
+      }
+      
+/* Edit play/pause button on Time animation*/
+i.glyphicon.glyphicon-play {
+    color: #e1210d; 
+    line-height: 2}
+i.glyphicon.glyphicon-pause {
+    color: #e1210d; 
+    line-height: 2}
+    
+ /* Customize color of dropdown source selection to match map colors*/   
+a#bs-select-1-0.dropdown-item {
+color: #d92809}
+a#bs-select-1-1.dropdown-item {
+color: #f5a04c}
+a#bs-select-1-2.dropdown-item {
+color: #88db7d}
+a#bs-select-1-3.dropdown-item {
+color: #1c73a6}
+
+a#bs-select-2-0.dropdown-item {
+color: #d92809}
+a#bs-select-2-1.dropdown-item {
+color: #f5a04c}
+a#bs-select-2-2.dropdown-item {
+color: #88db7d}
+a#bs-select-2-3.dropdown-item {
+color: #1c73a6}
+
+
+/* Change legend icons to circles instead of squares*/
+div.info.legend.leaflet-control i{
+  border-radius: 50%;
+  opacity: 1 !important
+}
+
+

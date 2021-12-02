@@ -1,0 +1,145 @@
+Name,Type,Latitude,Longitude,Region,Burn_status,Snow_zone,Sensor_model,Sensor_install,Sensor_remove,Comments
+michigan,rain,,,frontrange,unburned,persistent,TE525,2015-12-03,still running,
+michigan,snow,,,frontrange,unburned,persistent,camera,2015-12-03,2018-12-26,
+michigan,Ts_5,,,frontrange,unburned,persistent,EC-TM,2015-12-03,still running,
+michigan,VWC_5,,,frontrange,unburned,persistent,EC-TM,2015-12-03,still running,
+michigan,VWC_20,,,frontrange,unburned,persistent,EC-5,2015-12-03,still running,
+michigan,VWC_40,,,frontrange,unburned,persistent,EC-5,2015-12-03,still running,
+michigan,VWC_50,,,frontrange,unburned,persistent,EC-5,2015-12-03,still running,
+michiganditch,stream,40.51455314,-105.8838244,frontrange,unburned,persistent,WT-HR1000,2017-06-28,2020-07-01,sensor started giving unrealistic values
+michiganditch,stream,40.51455314,-105.8838244,frontrange,unburned,persistent,U2,2021-01-10,still running,
+michiganditch,stream,40.51455314,-105.8838244,frontrange,unburned,persistent,WT-HR1000,2021-08-05,still running,
+michiganditch,baro,40.51445383,-105.8839021,frontrange,unburned,persistent,U2,2021-01-10,still running,
+michiganditch,snow,40.51445383,-105.8839021,frontrange,unburned,persistent,camera,2020-11-22,still running,
+montgomery,rain,40.54368283,-105.8817328,frontrange,unburned,persistent,,,still running,
+montgomery,stream,40.54369047,-105.8813543,frontrange,burned_2020,persistent,WT-HR1000,2020-11-19,still running,
+montgomery,snow,40.54369047,-105.8813543,frontrange,burned_2020,persistent,camera,2020-11-19,still running,
+joewright,4R,40.53284743,-105.8874722,frontrange,unburned,persistent,SN-500,2021-01-09,still running,
+joewright,Ta,40.53284743,-105.8874722,frontrange,unburned,persistent,HC2S3,2021-02-20,still running,
+joewright,RH,40.53284743,-105.8874722,frontrange,unburned,persistent,HC2S3,2021-02-20,still running,
+joewright,u,40.53284743,-105.8874722,frontrange,unburned,persistent,RM Young 05108-45,2021-01-09,still running,
+joewright,rain,40.53281329,-105.8874620,frontrange,unburned,persistent,TE525MM-L,2021-04-18,still running,
+joewright,Ts_5,40.53284743,-105.8874722,frontrange,unburned,persistent,109-L,2021-01-09,still running,
+joewright,VWC_5,40.53284743,-105.8874722,frontrange,unburned,persistent,SM150,2021-01-09,still running,
+joewright,VWC_20,40.53284743,-105.8874722,frontrange,unburned,persistent,SM150,2021-01-09,still running,
+joewright,VWC_50,40.53284743,-105.8874722,frontrange,unburned,persistent,SM150,2021-01-09,still running,
+joewright_burn,Ta,40.56354374,-105.8673675,frontrange,burned_2020,persistent,HygroVUE5,12/16/20,still running,
+joewright_burn,RH,40.56354374,-105.8673675,frontrange,burned_2020,persistent,HygroVUE5,12/16/20,still running,
+joewright_burn,snow,40.56354374,-105.8673675,frontrange,burned_2020,persistent,SR50A,12/16/20,still running,
+joewright_burn,u,40.56354374,-105.8673675,frontrange,burned_2020,persistent,RM Young 05108,12/16/20,still running,moved to top of tower on 1/13/21
+joewright_burn,baro,40.56354374,-105.8673675,frontrange,burned_2020,persistent,Setra 278,12/16/20,still running,
+joewright_burn,radiation,40.56354374,-105.8673675,frontrange,burned_2020,persistent,Apogee SN500SS,1/13/21,still running,
+joewright_burn,Ts,40.56354374,-105.8673675,frontrange,burned_2020,persistent,SoilVUE10,1/15/21,still running,"0,-10, -20, -30 cm depths"
+joewright_burn,VWC,40.56354374,-105.8673675,frontrange,burned_2020,persistent,SoilVUE10,1/15/21,still running,"0,-10, -20, -30 cm depths"
+joewright_burn,snow,need to update,,frontrange,unburned,persistent,A2 sonic sensor,2/18/21,still running,standalone sensor installed ~100 m away in unburned forest
+bl4,rain,,,frontrange,burned_2020,persistent,,,still running,
+bl4,stream,,,frontrange,burned_2020,persistent,WT-HR1000,2020-11-16,still running,
+bl4,snow,,,frontrange,burned_2020,persistent,camera,2020-11-16,,
+aspen,rain,,,frontrange,burned_2020,transitional,TE525,2017-07-21,still running,data gap 2020-11 to 2021-05; gage was tipped diagonal when visited 2020-10-27
+aspen,stream,,,frontrange,burned_2020,transitional,WT-HR1000,2017-07-13,still running,
+tunnel,rain,,,frontrange,burned_2020,transitional,TE525MM-L,2021-04-18,still running,
+tunnel,stream,40.66994494,-105.8102038,frontrange,burned_2020,transitional,RuggedTroll,2021-06-28,still running,2021-08-05 moved adjacent to caprod
+tunnel,baro,,,frontrange,burned_2020,transitional,RuggedTroll,2021-05-24,still running,
+tunnel,stream,40.66994494,-105.8102038,frontrange,burned_2020,transitional,WT-HR1000,2021-08-05,still running,
+tunnel,snow,40.669899408333336},-105.8102854,frontrange,burned_2020,transitional,camera,2020-12-08,still running,
+tunnel,snow,,,frontrange,burned_2020,transitional,SR50A,2020-12-16,still running,
+tunnel,Ta,40.66988344,-105.8099604,frontrange,burned_2020,transitional,CS215,2020-12-16,still running,
+tunnel,RH,40.66988344,-105.8099604,frontrange,burned_2020,transitional,CS215,2020-12-16,still running,
+tunnel,u,40.66988344,-105.8099604,frontrange,burned_2020,transitional,RM Young 03001,2020-12-08,still running,
+tunnel,4R,40.66988344,-105.8099604,frontrange,burned_2020,transitional,SN-500,2020-12-16,see notes,2021-07-16 took down 4R to send for repair (SW in off)
+tunnel,NR,40.66988344,-105.8099604,frontrange,burned_2020,transitional,NR-Lite,2020-12-08,still running,
+tunnel,Ts_5,40.66988344,-105.8099604,frontrange,burned_2020,transitional,SM300,2020-12-08,still running,
+tunnel,VWC_5,40.66988344,-105.8099604,frontrange,burned_2020,transitional,SM300,2020-12-08,still running,
+tunnel,VWC_20,40.66988344,-105.8099604,frontrange,burned_2020,transitional,SM300,2020-12-08,still running,
+tunnel,VWC_50,40.66988344,-105.8099604,frontrange,burned_2020,transitional,SM300,2020-12-08,still running,
+tunnel,precip,40.66988344,-105.8099604,frontrange,burned_2020,transitional,T-200B,2021-0814,still running,
+washout,stream,40.70163039,-105.6726382,frontrange,burned_2020,intermittent,U2,2020-12-16,still running,
+dry,rain,40.70672394,-105.6393929,frontrange,burned_2020,intermittent,TE525,2016-10-01,2020-06-23,burned in Cameron Peak Fire
+dry,snow,40.70672394,-105.6393929,frontrange,burned_2020,intermittent,camera,2016-10-01,2020-06-23,burned in Cameron Peak Fire
+dry,Ta,40.70672394,-105.6393929,frontrange,burned_2020,intermittent,ECT,2016-09-18,2020-06-23,burned in Cameron Peak Fire
+dry,Ts_5,40.70672394,-105.6393929,frontrange,burned_2020,intermittent,EC-TM,2016-09-18,2020-06-23,burned in Cameron Peak Fire
+dry,VWC_5,40.70672394,-105.6393929,frontrange,burned_2020,intermittent,EC-TM,2016-09-18,2020-06-23,burned in Cameron Peak Fire
+dry,VWC_20,40.70672394,-105.6393929,frontrange,burned_2020,intermittent,EC-5,2016-09-18,2020-06-23,burned in Cameron Peak Fire
+dry,VWC_40,40.70672394,-105.6393929,frontrange,burned_2020,intermittent,EC-5,2016-09-18,2020-06-23,burned in Cameron Peak Fire
+dry,VWC_50,40.70672394,-105.6393929,frontrange,burned_2020,intermittent,EC-5,2016-09-18,2020-06-23,burned in Cameron Peak Fire
+dry,stream,40.70631594,-105.6392187,frontrange,burned_2020,intermittent,RuggedTroll,2016-09-18,still running,
+dry,stream,40.70631594,-105.6392187,frontrange,burned_2020,intermittent,WT-HR1000,2017-07-05,2020-06-23,burned in Cameron Peak Fire
+dry,stream,40.70631594,-105.6392187,frontrange,burned_2020,intermittent,WT-HR1000,2021-06-14,still running,
+dry,baro,40.70672394,-105.6393929,frontrange,burned_2020,intermittent,RuggedTroll,2016-09-18,2020-06-23,burned in Cameron Peak Fire
+dry,baro,40.70672394,-105.6393929,frontrange,burned_2020,intermittent,RuggedTroll,2020-11-25,still running,
+dry,rain,40.70672394,-105.6393929,frontrange,burned_2020,intermittent,TE525,2021-05-18,still running,
+dry,VWC_5,40.70672394,-105.6393929,frontrange,burned_2020,intermittent,EC-5,2020-11-25,still running,
+dry,VWC_20,40.70672394,-105.6393929,frontrange,burned_2020,intermittent,EC-5,2020-11-25,still running,
+dry,VWC_50,40.70672394,-105.6393929,frontrange,burned_2020,intermittent,EC-5,2020-11-25,still running,
+dry,Ts_5,40.70672394,-105.6393929,frontrange,burned_2020,intermittent,TCAV,2021-01-28,still running,
+dry,Ta,40.70672394,-105.6393929,frontrange,burned_2020,intermittent,,2021-01-28,still running,
+dry,RH,40.70672394,-105.6393929,frontrange,burned_2020,intermittent,,2021-01-28,still running,
+dry,u,40.70672394,-105.6393929,frontrange,burned_2020,intermittent,041a,2021-01-28,still running,
+dry,snow,40.70672394,-105.6393929,frontrange,burned_2020,intermittent,SR50A,2021-01-28,still running,
+drytrib,stream,40.70744623,-105.6385486,frontrange,burned_2020,intermittent,RuggedTroll,,,
+dadd,rain,40.69736392,-105.5401549,frontrange,unburned,intermittent,TE525,2017-07-19,still running,
+dadd,stream,40.69748204,-105.5396808,frontrange,burned_2020,intermittent,WT-HR1000,2017-03-23,still running,
+skin,rain,40.67621594,-105.3882298,frontrange,burned_2012,intermittent,Rainwise,2018-04-30,still running,
+skin,stream,40.67623288,-105.3881284,frontrange,burned_2012,intermittent,WT-HR1000,2015-10-01,still running,
+hewlett,stream,40.69161335,-105.3109516,frontrange,burned_2012,intermittent,WT-HR1000,2017-06-08,still running,
+hill,stream,40.6833461,-105.3024869,frontrange,burned_2012,intermittent,WT-HR1000,2015-10-01,still running,
+greyrock,rain,40.69596824,-105.2896858,frontrange,unburned,intermittent,Rainwise,2018-05-11,still running,
+greyrock,stream,40.69569663,-105.2940703,frontrange,unburned,intermittent,WT-HR1000,2017-06-28,still running,
+mill,snow,40.55879721,-105.17974499,frontrange,unburned,intermittent,camera,2015-10-26,still running,
+mill,rain,40.55879721,-105.17974499,frontrange,unburned,intermittent,TE525,2015-10-22,2021-08-13,gauge was tipped about 10 deg off center; data since 10/2020 may be affected
+mill,Ta,40.55879721,-105.17974499,frontrange,unburned,intermittent,ECT,2015-10-22,2020-04-07,logger stopped working
+mill,Ts_5,40.55879721,-105.17974499,frontrange,unburned,intermittent,EC-TM,2015-10-22,2020-04-07,logger stopped working
+mill,VWC_5,40.55879721,-105.17974499,frontrange,unburned,intermittent,EC-TM,2015-10-22,2020-04-07,logger stopped working
+mill,VWC_20,40.55879721,-105.17974499,frontrange,unburned,intermittent,EC-5,2015-10-22,2020-04-07,logger stopped working
+mill,VWC_50,40.55879721,-105.17974499,frontrange,unburned,intermittent,EC-5,2015-10-22,2020-04-07,logger stopped working
+mill,stream,40.55972589,-105.17301802,frontrange,unburned,intermittent,WT-HR1000,,still running,
+mill,stream,40.55972589,-105.17301802,frontrange,unburned,intermittent,RuggedTroll,2015-10-25,still running,
+mill,baro,40.55879721,-105.17974499,frontrange,unburned,intermittent,RuggedTroll,2015-01-01,still running,
+bighorn,rain,40.407387,-105.59248,frontrange,unburned,intermittent,Rainwise,2017-04-03,2018-09-25,problems with sensor getting disturbed by animals; latter part of data record lost; probably don't use any data
+bighorn,snow,40.407395,-105.592531,frontrange,unburned,intermittent,camera,2016-02-18,2018-12-25,
+bighorn,Ta,40.407357,-105.592487,frontrange,unburned,intermittent,HMP45C,2016-02-18,2020-08-16,
+bighorn,Ts_5,40.407357,-105.592487,frontrange,unburned,intermittent,SM150,2016-02-18,2020-08-16,
+bighorn,Ts_20,40.407357,-105.592487,frontrange,unburned,intermittent,SM150,2016-02-18,2020-08-16,
+bighorn,Ts_50,40.407357,-105.592487,frontrange,unburned,intermittent,SM150,2016-02-18,2020-08-16,
+bighorn,baro,,,frontrange,unburned,intermittent,RuggedTroll,2016-02-18,2020-08-16,removed all sensors
+bighorn,baro,40.407357,-105.592487,frontrange,unburned,intermittent,U2,2020-12-18,still running,
+bighorn,stream,,,frontrange,unburned,intermittent,RuggedTroll,2016-02-18,2020-08-16,
+bighorn,stream,40.410026,-105.594516,frontrange,unburned,intermittent,U2,2020-12-18,still running,
+monument,rain,,,grandvalley,unburned,intermittent,Rainwise,,,
+monument,snow,,,grandvalley,unburned,intermittent,camera,,,
+monument,Ts_5,,,grandvalley,unburned,intermittent,EC-TM,,,
+monument,VWC_5,,,grandvalley,unburned,intermittent,,,,
+monument,VWC_40,,,grandvalley,unburned,intermittent,,,,
+monument,VWC_50,,,grandvalley,unburned,intermittent,,,,
+monument,baro,,,grandvalley,unburned,intermittent,RuggedTroll,,,
+monument,stream,,,grandvalley,unburned,intermittent,RuggedTroll,,,
+gm_persistent,rain,,,grandvalley,unburned,persistent,Rainwise,,,
+gm_persistent,snow,,,grandvalley,unburned,persistent,camera,,,
+gm_persistent,Ts_5,,,grandvalley,unburned,persistent,EC-TM,,,
+gm_persistent,VWC_5,,,grandvalley,unburned,persistent,EC-TM,,,
+gm_persistent,VWC_40,,,grandvalley,unburned,persistent,EC-5,,,
+gm_persistent,VWC_50,,,grandvalley,unburned,persistent,EC-5,,,
+gm_persistent,stream,,,grandvalley,unburned,persistent,WT-HR1000,,,
+gm_transitional,rain,,,grandvalley,unburned,transitional,Rainwise,,,
+gm_transitional,snow,,,grandvalley,unburned,transitional,camera,,,
+gm_transitional,Ts_5,,,grandvalley,unburned,transitional,EC-TM,,,
+gm_transitional,VWC_5,,,grandvalley,unburned,transitional,EC-TM,,,
+gm_transitional,VWC_40,,,grandvalley,unburned,transitional,EC-5,,,
+gm_transitional,VWC_50,,,grandvalley,unburned,transitional,EC-5,,,
+gm_transitional,stream,,,grandvalley,unburned,transitional,WT-HR1000,,,
+andrews,Ts_5,,,frontrange,unburned,persistent,EC-TM,2016-03-01,2018-07-31,
+andrews,VWC_5,,,frontrange,unburned,persistent,EC-TM,2016-03-01,2018-07-31,
+andrews,VWC_40,,,frontrange,unburned,persistent,EC-5,2016-03-01,2018-07-31,
+andrews,VWC_50,,,frontrange,unburned,persistent,EC-5,2016-03-01,2018-07-31,
+u_w,stream,40.66039395,-105.560857,frontrange,burned_2020,,WT-HR1000,2021-07-19,still running,Caprod belongs to RMRS
+u_w,rain,40.66005439,-105.5578187,frontrange,burned_2020,,Rainwise,2021-07-19,still running,
+u_m,stream,40.65766455,-105.5555571,frontrange,burned_2020,,WT-HR1000,2021-07-26,still running,Caprod belongs to RMRS
+u_m,rain,40.65882344,-105.5534331,frontrange,burned_2020,,Rainwise,2021-07-26,still running,
+u_e,stream,40.6573273,-105.5454499,frontrange,burned_2020,,WT-HR1000,2021-07-26,still running,Caprod belongs to RMRS
+u_e,rain,40.65742355,-105.5461262,frontrange,burned_2020,,Rainwise,2021-09-06,still running,
+m_w,stream,40.65478438,-105.5397333,frontrange,burned_2020,,WT-HR1000,2021-07-26,still running,Caprod belongs to RMRS
+m_w,rain,,,frontrange,burned_2020,,Rainwise,2021-08-20,still running,
+m_m,stream,40.65315058,-105.5335843,frontrange,burned_2020,,WT-HR1000,2021-07-26,still running,Caprod belongs to RMRS
+m_m,rain,40.65306229,-105.533893,frontrange,burned_2020,,Rainwise,2021-09-06,still running,
+m_e,stream,40.64588047,-105.5324039,frontrange,burned_2020,,WT-HR1000,2021-07-19,still running,Caprod belongs to RMRS
+m_e,rain,40.64609596,-105.5329463,frontrange,burned_2020,,Rainwise,2021-07-19,still running,
