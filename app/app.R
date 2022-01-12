@@ -24,8 +24,8 @@ weather_data <- readRDS("data/weather_update.RDS") %>%
   mutate(category = paste(p,s,sd,mt,mt2,at))
   
   
-
-water_data <- readRDS("data/water_data.RDS") %>% arrange(Date) %>% 
+#read in updated file
+water_data <- readRDS("data/water_data_update.RDS") %>% arrange(Date) %>% 
   mutate(source_spec = if_else(source == "CSU_Kampf", "CSU-Stephanie Kampf", source)) %>%
   mutate(source = if_else(source == "CSU_Kampf", "CSU", source)) %>% 
   mutate(p = if_else(!(is.na(precip_mm)), "Precipitation", "")) %>% 
@@ -35,7 +35,7 @@ water_data <- readRDS("data/water_data.RDS") %>% arrange(Date) %>%
   mutate(p2 = if_else(!(is.na(pH)), "Water Quality", "")) %>% 
   mutate(d2 = if_else(!(is.na(DO)), "Water Quality", "")) %>% 
   mutate(c = if_else(!(is.na(Conductivity)), "Water Quality", "")) %>% 
-  mutate(category = paste(p,s,d,t,p2,d2,c))
+  mutate(category = paste(p,s,d,t,p2,d2,c)) 
   
   
 
@@ -214,7 +214,8 @@ ui <- navbarPage(
             "Average Temperature" = "Average_temp"
           )
         ),
-        #em("Circle size represents variable value"),
+        em("Click on a station to view raw values. Data last updated 12/17/21"),
+        br(),
         br(),
         pickerInput("studySites", "Study Sites:",
                     choices = c("CSU", "FoCo", "USFS", "USGS"),
