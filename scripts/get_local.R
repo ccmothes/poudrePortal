@@ -75,17 +75,62 @@ daily_data_refined <- daily_data %>%
          discharge_Ls = Discharge_Ls)
 
 
+# CSU - Matt Ross Reservoir Data -----------------------------------------------
+
+res_data <- read_csv("data/final_reservoir_data_for_caitlin.csv") %>% 
+  # remove long draw road washout (no data)
+  filter(Stream != "Long Draw Road Washout") %>% 
+  #rename to lat/long
+  rename(long = POINT_X, lat = POINT_Y) %>% 
+  #fix coords for two sites
+  mutate(long = replace(long, Site_Code == "BMR", -105.8363862),
+         long = replace(long, Site_Code == "CHR", -105.8427182),
+         lat = replace(lat, Site_Code == "BMR", 40.60059258),
+         lat = replace(lat, Site_Code == "CHR", 40.60232576)) %>% 
+  #remove DUPLICATE and blanks
+  filter(SAMPLE_TTYPE == "NORM") %>% 
+  #remove unnessecary columns and rename Stream to match
+  dplyr::select(-c(ID, Number, BOTTLE_NOTES, LAB_NOTES, SAMPLE_TTYPE, Sample_Name,
+                   Site_Code, Time))
+
+saveRDS()
+  
+
+#test for dup dates...lump coords for Chambers Outflow, CHR -> CHD
+# # and for barnes meadow outflow BMR -> BMD
+# 
+# res_data %>% mutate(long = replace(long, Site_Code == "BMR", -105.8363862),
+#                     long = replace(long, Site_Code == "CHR", -105.8427182),
+#                     lat = replace(lat, Site_Code == "BMR", 40.60059258),
+#                     lat = replace(lat, Site_Code == "CHR", 40.60232576)) %>% 
+#   #see if there are duplicate dates
+#   filter(Stream %in% c("Chambers Lake Outflow", "Barnes Meadow Reservoir Outflow")) %>% 
+#   distinct(Stream, Date) %>% View()
+
+
+
+
 # USFS - Chuck Roads water quality data -----------------------------------------
 
 cp_coords <- read_csv("data/CamPeak_Coordinates.csv") %>% rename(Site =  SITE,
                                                                  long = "X_WGS84",
                                                                  lat = "Y_WGS84")
+
+
+#test how many sites have dup dates
+readxl::read_excel("data/CamPk_toMothes_trial.xlsx") %>% 
+  group_by(Site, Date) %>% filter(n()>1) %>% View()
+
 waterQual <- readxl::read_excel("data/CamPk_toMothes_trial.xlsx") %>% 
   left_join(cp_coords, by = "Site") %>% 
-  group_by(Site, Date, SiteLabel, SiteType, Trt_CP) %>% summarise(across(where(is.numeric),
-                                            ~mean(.x, na.rm = TRUE))) %>% 
-  ungroup()
+  # Don't average, these are quality control dups that were left in the dataset
+  # group_by(Site, Date, SiteLabel, SiteType, Trt_CP) %>% 
+  # summarise(across(where(is.numeric),
+  #                  ~ mean(.x, na.rm = TRUE))) %>%
+  #ungroup()
 
+  #remove second dup instead, but NOTE MENTION THIS TO CHUCK/TIM
+  distinct(Site, Date, .keep_all = TRUE)
 
 saveRDS(waterQual, "portal_demo/data/water_qual.RDS")
 

@@ -481,7 +481,8 @@ server <-  function(input, output, session){
   
   final_df <- reactive({
     combined() %>% rename(streamflow = input$streamVar, quality = input$qual,
-                          weather = input$weatherVar)
+                          weather = input$weatherVar) %>% 
+      arrange(Date)
     
   })
   
@@ -577,7 +578,7 @@ server <-  function(input, output, session){
                   y = final_df()$weather,
                   name = ~ final_df()$Site,
                   mode = "lines+markers") %>%
-        plotly::layout(yaxis = list(title = input$weatherVar),
+        plotly::layout(yaxis = list(title = input$weatherVar, range = list(0, max(final_df()$weather))),
                        xaxis = list(range = c(input$range[1], input$range[2]),
                                     showgrid = T),
                        legend = list(orientation = "h", x = 0.01, y = 1.2))

@@ -39,4 +39,15 @@ div.info.legend.leaflet-control i{
   opacity: 1 !important
 }
 
+/* reduce white space between plots...not sure if this is working*/
+.form-group {
+            margin-bottom: 0 !important;
+            margin-top: 0 !important;
+          }
+          
+.checkbox {margin: 0}
+.checkbox p {margin: 0;}
+.shiny-input-container {margin-bottom: 0;}
+
+.selectize-control {margin-bottom: 0px;}
 
