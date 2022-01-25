@@ -65,14 +65,17 @@ saveRDS(daily_data, "portal_demo/data/daily_data.RDS")
 
 #UPDATE tie data to sensor coordinates (kicked out soil temp sensor info)
 
+daily_data <- readRDS("data/daily_data.RDS")
+
 locations_stream <- locations %>% filter(type == "stream gage") %>% 
-  rename(Site = name, lat = POINT_Y, long = POINT_X)
+  rename(Site = name, lat = POINT_Y, long = POINT_X) %>% as_tibble()
 
 daily_data_refined <- daily_data %>% 
   left_join(locations_stream, by = 'Site') %>% 
   mutate(source = "CSU_Kampf") %>% 
+  as_tibble() %>% 
   select(Site, source, Date, long, lat, precip_mm = P_mm, stage_cm = Stage_cm,
-         discharge_Ls = Discharge_Ls)
+         discharge_Ls = Discharge_Ls) 
 
 
 # CSU - Matt Ross Reservoir Data -----------------------------------------------
@@ -134,12 +137,18 @@ waterQual <- readxl::read_excel("data/CamPk_toMothes_trial.xlsx") %>%
 
 saveRDS(waterQual, "portal_demo/data/water_qual.RDS")
 
-#UPDATE CONVERT TO METRIC
+#UPDATE add in all variables
 
-waterQual_refined <- waterQual %>% 
-  mutate(stage_cm = Stage_PBR_ft * 30.48, source = "USFS") %>% 
-  dplyr::select(Site, source, Date, stage_cm, Turbidity, DO = DOC, pH, long, lat)
+waterQual <- readRDS("data/water_qual.RDS") %>% mutate(source = "USFS") %>% 
+  dplyr::select(Site, Date, source, Turbidity:lat)
 
+
+
+#this was a mistake
+# waterQual_refined <- waterQual %>% 
+#   mutate(stage_cm = Stage_PBR_ft * 30.48, source = "USFS") %>% 
+#   dplyr::select(Site, source, Date, stage_cm, Turbidity, DO = DOC, pH, long, lat)
+# 
 
 
 # City FoCo - Jared Heath water data -------------------------------------
@@ -256,12 +265,15 @@ usgs_sites_refined <- usgs_sites %>%
 
 # combine all datasets --------------------------------
 
-water_data <- bind_rows(daily_data_refined, foco_data_refined, waterQual_refined, usgs_sites_refined) %>% 
+water_data <- bind_rows(daily_data_refined, foco_data_refined, waterQual, usgs_sites_refined) %>% 
   mutate(Date = lubridate::as_date(Date))
 
 
 
 saveRDS(water_data, "data/water_data.RDS")
+#save updated version
+saveRDS(water_data, "data/water_data_update.RDS")
+saveRDS(water_data, "app/data/water_data_update.RDS")
 
 # test plotly -----------------------------------
 
