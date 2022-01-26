@@ -4,6 +4,7 @@ library(readr)
 library(purrr)
 library(dplyr)
 library(sf)
+library(lubridate)
 
 # CSU - Stephanie Kampf's data ----------------------------------------------
 
@@ -25,12 +26,17 @@ for (i in 1:length(sites)){
   ), read_csv) %>% 
     purrr::map(function(x) mutate(x, Date = as.POSIXct(Date, format = "%m/%d/%Y"))) %>% 
     set_names(rep(names(sites[i]), length(.))) %>% 
-    bind_rows(.id = "Site")
+    bind_rows(.id = "Site") %>% 
+    #collapse rows (some dup dates with diff times)
+    #first remove time from date column
+    mutate(Date = as.Date(Date)) %>% 
+    group_by(Site, Date) %>% 
+    summarise(across(where(is.numeric), ~ mean(.x, na.rm = TRUE)))
   
 }
 
-daily_data <- bind_rows(files) %>%
-  distinct(Date, Site, .keep_all = TRUE)
+
+daily_data <- bind_rows(files)
 
 #old data
 # daily_data <-
@@ -58,10 +64,11 @@ watersheds <- read_sf("data/watersheds.shp")
 
 
 #tie daily data to watersheds
-daily_data <- left_join(watersheds, daily_data, by = "Site") %>% 
-  st_transform(4326)
+## Remove this, using point locations instead
+# daily_data <- left_join(watersheds, daily_data, by = "Site") %>% 
+#   st_transform(4326)
 
-saveRDS(daily_data, "portal_demo/data/daily_data.RDS")
+saveRDS(daily_data, "data/daily_data.RDS")
 
 #UPDATE tie data to sensor coordinates (kicked out soil temp sensor info)
 
@@ -74,8 +81,12 @@ daily_data_refined <- daily_data %>%
   left_join(locations_stream, by = 'Site') %>% 
   mutate(source = "CSU_Kampf") %>% 
   as_tibble() %>% 
-  select(Site, source, Date, long, lat, precip_mm = P_mm, stage_cm = Stage_cm,
-         discharge_Ls = Discharge_Ls) 
+  #NOTE calling Ta_C average temp just to match NOAA, but is just temp from single reading
+  # I think... ASK STEPHANIE
+  select(Site, source, Date, long, lat, Snow_depth = Snow_depth_cm, precip_mm = P_mm, stage_cm = Stage_cm,
+         discharge_Ls = Discharge_Ls, Average_temp = Ta_C, Soil_temp = Ts_C) 
+
+  
 
 
 # CSU - Matt Ross Reservoir Data -----------------------------------------------
@@ -94,9 +105,10 @@ res_data <- read_csv("data/final_reservoir_data_for_caitlin.csv") %>%
   filter(SAMPLE_TTYPE == "NORM") %>% 
   #remove unnessecary columns and rename Stream to match
   dplyr::select(-c(ID, Number, BOTTLE_NOTES, LAB_NOTES, SAMPLE_TTYPE, Sample_Name,
-                   Site_Code, Time))
-
-saveRDS()
+                   Site_Code, Time)) %>% 
+  rename(Site = Stream, water_temp_C = Temp) %>% 
+  mutate(source = "CSU_Ross",
+         Date = as.Date(as.POSIXct(Date, format = "%m/%d/%Y")))
   
 
 #test for dup dates...lump coords for Chambers Outflow, CHR -> CHD
@@ -133,14 +145,17 @@ waterQual <- readxl::read_excel("data/CamPk_toMothes_trial.xlsx") %>%
   #ungroup()
 
   #remove second dup instead, but NOTE MENTION THIS TO CHUCK/TIM
-  distinct(Site, Date, .keep_all = TRUE)
+  mutate(Date = as.Date(Date)) %>% 
+  distinct(Site, Date, .keep_all = TRUE) %>% 
+  mutate(source = "USFS") %>% 
+  dplyr::select(Site, Date, source, Turbidity:lat)
 
-saveRDS(waterQual, "portal_demo/data/water_qual.RDS")
+#saveRDS(waterQual, "data/water_qual.RDS")
 
 #UPDATE add in all variables
 
-waterQual <- readRDS("data/water_qual.RDS") %>% mutate(source = "USFS") %>% 
-  dplyr::select(Site, Date, source, Turbidity:lat)
+# waterQual <- readRDS("data/water_qual.RDS") %>% mutate(source = "USFS") %>% 
+#   dplyr::select(Site, Date, source, Turbidity:lat)
 
 
 
@@ -187,13 +202,12 @@ for (i in 1:length(sites2)){
     summarise(across(contains("precip"), ~ sum(.x, na.rm = TRUE)),
               across(contains(vars), ~ mean(.x, na.rm = TRUE))) %>% 
     mutate(Site = sites2[i], 
-           Date = as.POSIXct(Date, format = "%m/%d/%Y"))
+           Date = as.Date(as.POSIXct(Date, format = "%m/%d/%Y")))
   
   
 }
 
-foco_data <- bind_rows(files2) %>%
-  distinct(Date, Site, .keep_all = TRUE)
+foco_data <- bind_rows(files2)
 
 
 #combine with coordinates
@@ -245,8 +259,10 @@ site_meta <- readNWISsite(sites3) %>%
 
 #test out
 
-#get daily data fro discharge
-x <- readNWISdv(sites3, "00060", "2020-01-01", Sys.Date())
+#get daily data for discharge
+#NOTE on the map viewer, it shows gage ht is avail, but is not with this package
+#for some reason...
+x <- readNWISdv(sites3, "00060", "2021-01-01", Sys.Date())
 
 
 #now join with meta to get coords
@@ -256,8 +272,7 @@ usgs_sites <- left_join(site_meta, x, by = "site_no") %>%
 
 #convert to metric
 usgs_sites_refined <- usgs_sites %>% 
-  mutate(discharge_Ls = discharge_cfs * 28.3168,
-         source = "USGS") %>% 
+  mutate(discharge_Ls = discharge_cfs * 28.3168) %>% 
   select(Site = site_no, source, Date = date,
          lat, long, discharge_Ls)
 
@@ -265,8 +280,7 @@ usgs_sites_refined <- usgs_sites %>%
 
 # combine all datasets --------------------------------
 
-water_data <- bind_rows(daily_data_refined, foco_data_refined, waterQual, usgs_sites_refined) %>% 
-  mutate(Date = lubridate::as_date(Date))
+water_data <- bind_rows(daily_data_refined, foco_data_refined, res_data, waterQual, usgs_sites_refined) 
 
 
 

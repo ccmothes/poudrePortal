@@ -12,6 +12,7 @@ library(stringr)
 
 camPeak_simple <- readRDS("data/camPeakSimple.RDS")
 
+
 weather_data <- readRDS("data/weather_update.RDS") %>% 
   rename(Site = id, Date = date, long = longitude, lat = latitude) %>% 
   mutate(source = "NOAA") %>% 
@@ -21,25 +22,48 @@ weather_data <- readRDS("data/weather_update.RDS") %>%
   mutate(mt = if_else(!(is.na(Minimum_temp)), "Temperature", "")) %>% 
   mutate(mt2 = if_else(!(is.na(Maximum_temp)), "Temperature", "")) %>%
   mutate(at = if_else(!(is.na(Average_temp)), "Temperature", "")) %>% 
-  mutate(category = paste(p,s,sd,mt,mt2,at))
+  mutate(data_available = paste(p,s,sd,mt,mt2,at))
   
   
+qual_vars <- c("water_temp_C", "Chla", "Turbidity", "DOC", "DTN", "pH",
+               "ANC", "SC", "Na", "NH4", "K", "Mg", "Ca", "F", "Cl",
+               "NO3", "PO4", "SO4")
+
 #read in updated file
 water_data <- readRDS("data/water_data_update.RDS") %>% arrange(Date) %>% 
-  mutate(source_spec = if_else(source == "CSU_Kampf", "CSU-Stephanie Kampf", source)) %>%
-  mutate(source = if_else(source == "CSU_Kampf", "CSU", source)) %>% 
-  mutate(p = if_else(!(is.na(precip_mm)), "Precipitation", "")) %>% 
-  mutate(s = if_else(!(is.na(stage_cm)), "Streamflow", "")) %>% 
-  mutate(d = if_else(!(is.na(discharge_Ls)), "Streamflow", "")) %>% 
-  mutate(t = if_else(!(is.na(Turbidity)), "Water Quality", "")) %>% 
-  mutate(p2 = if_else(!(is.na(pH)), "Water Quality", "")) %>% 
-  mutate(d2 = if_else(!(is.na(DO)), "Water Quality", "")) %>% 
-  mutate(c = if_else(!(is.na(Conductivity)), "Water Quality", "")) %>% 
-  mutate(category = paste(p,s,d,t,p2,d2,c)) 
+  #mutate(source_spec = if_else(source == "CSU_Kampf", "CSU-Stephanie Kampf", source)) %>%
+  #mutate(source = if_else(source == "CSU_Kampf", "CSU", source)) %>% 
+  # mutate(p = if_else(!(is.na(precip_mm)), "Precipitation", "")) %>% 
+  # mutate(s = if_else(!(is.na(stage_cm)), "Streamflow", "")) %>% 
+  # mutate(d = if_else(!(is.na(discharge_Ls)), "Streamflow", "")) %>% 
+  # mutate(t = if_else(!(is.na(Turbidity)), "Water Quality", "")) %>% 
+  # mutate(p2 = if_else(!(is.na(pH)), "Water Quality", "")) %>% 
+  # mutate(d2 = if_else(!(is.na(DO)), "Water Quality", "")) %>% 
+  # mutate(c = if_else(!(is.na(Conductivity)), "Water Quality", "")) %>% 
+  # mutate(category = paste(p,s,d,t,p2,d2,c)) 
+  mutate(p = if_else(!(is.na(precip_mm)), "Precipitation", ""),
+         temp = if_else(if_any(c("Average_temp", "Soil_temp"), ~!is.na(.)), "Temperature", ""),
+         stream = if_else(if_any(c("stage_cm", "discharge_Ls"), ~!is.na(.)), "Streamflow", ""),
+         snow = if_else(!(is.na(Snow_depth)), "Snow", ""),
+         wq = if_else(if_any(qual_vars, ~!is.na(.)), "Water Quality", ""),
+         data_available = paste(p, temp, stream, snow, wq))
   
   
+  
+# get available data for each site
+data_avail <- water_data %>% group_by(Site) %>% 
+  summarise(across(c("p","stream", "temp", "snow", "wq"), ~paste(unique(.), collapse = ""))) %>% 
+  mutate(data_available = paste(p, stream, temp, snow, wq)) %>% 
+  dplyr::select(Site, data_available)
 
-sites <- water_data %>% distinct(Site, .keep_all = TRUE) %>% dplyr::select(Site, source, long, lat)
+
+sites <- water_data %>% distinct(Site, .keep_all = TRUE) %>% dplyr::select(Site, source, long, lat) %>% 
+  left_join(data_avail, by = "Site")
+
+#clean up, remove extra columns from weather and water data
+weather_data <- weather_data %>% dplyr::select(-c(p,s,sd,mt,mt2,at))
+
+water_data <- water_data %>% dplyr::select(-c(p, temp, stream, snow, wq))
 
 
 #from shinyTime:
@@ -91,8 +115,8 @@ ui <- navbarPage(
                br(),
                br(),
                pickerInput("sourceChoice", "Filter by Source:",
-                          choices = c("CSU", "FoCo", "USFS", "USGS"),
-                          selected = c("CSU", "FoCo", "USFS", "USGS"),
+                          choices = c("CSU_Kampf", "CSU_Ross", "FoCo", "USFS", "USGS"),
+                          selected = c("CSU_Kampf", "CSU_Ross", "FoCo", "USFS", "USGS"),
                           multiple = TRUE),
                checkboxGroupButtons(
                  inputId = "varChoice",
@@ -150,12 +174,8 @@ ui <- navbarPage(
                         selectInput(
                           "qual",
                           "Water Quality",
-                          choices = c(
-                            "Turbidity" = "Turbidity",
-                            "pH" = "pH",
-                            "DO" = "DO",
-                            "Conductivity" = "Conductivity"
-                          )
+                          choices = all_of(qual_vars)
+                          
                         ),
                         plotlyOutput("waterQual", width = "100%", height = 190),
 
@@ -214,12 +234,12 @@ ui <- navbarPage(
             "Average Temperature" = "Average_temp"
           )
         ),
-        em("Click on a station to view raw values. Data last updated 12/17/21"),
+        em("Click on a station to view raw values. Data last updated 1/25/22"),
         br(),
         br(),
         pickerInput("studySites", "Study Sites:",
-                    choices = c("CSU", "FoCo", "USFS", "USGS"),
-                    selected = c("CSU", "FoCo", "USFS", "USGS"),
+                    choices = c("CSU_Kampf", "CSU_Ross", "FoCo", "USFS", "USGS"),
+                    selected = c("CSU_Kampf", "CSU_Ross", "FoCo", "USFS", "USGS"),
                     multiple = TRUE),
         hr(),
         br(),
@@ -236,11 +256,11 @@ server <-  function(input, output, session){
   weather1 <- reactive({
     
     if(is.null(input$varChoice))
-      return(weather_data %>% filter(is.na(category)))
+      return(weather_data %>% filter(is.na(data_available)))
     
     weather_data %>% 
       rename(variable = input$weatherVar) %>% 
-      filter(Date == input$range & str_detect(category, paste(input$varChoice, collapse = "|"))) 
+      filter(Date == input$range & str_detect(data_available, paste(input$varChoice, collapse = "|"))) 
 
   })
   
@@ -259,10 +279,10 @@ server <-  function(input, output, session){
   water_data_filtered <- reactive({
     
     if(is.null(input$varChoice))
-      return(water_data %>% filter(is.na(category)))
+      return(water_data %>% filter(is.na(data_avail)))
     
     water_data %>% filter(source %in% input$sourceChoice) %>% 
-      filter(str_detect(category, paste(input$varChoice, collapse = "|")))
+      filter(str_detect(data_available, paste(input$varChoice, collapse = "|")))
   })
   
   water_data_filtered2 <- reactive({
@@ -277,8 +297,8 @@ server <-  function(input, output, session){
   Precipitation <- c("Precipitation", "precip_mm")
   Snow <- c("Snow", "Snowfall", "Snow_depth")
   Streamflow <- c("Streamflow", "stage_cm", "discharge_Ls")
-  WaterQuality <- c("Water Quality", "Turbidity", "pH", "DO", "Conductivity")
-  Temperature <- c("Temperature", "Minimum_temp", "Maximum_temp", "Average_temp")
+  WaterQuality <- c("Water Quality", qual_vars)
+  Temperature <- c("Temperature", "Minimum_temp", "Maximum_temp", "Average_temp", "Soil_temp")
   
 
   pal <- colorFactor(palette = "Spectral", water_data$source)
@@ -383,7 +403,7 @@ server <-  function(input, output, session){
               fillOpacity = 1,
               popup = paste(
                 "Source:",
-                water_data_filtered()$source_spec,
+                water_data_filtered()$source,
                 "<br>",
                 "Site:",
                 water_data_filtered()$Site
@@ -430,7 +450,7 @@ server <-  function(input, output, session){
           fillOpacity = 1,
           popup = paste(
             "Source:",
-            water_data_filtered2()$source_spec,
+            water_data_filtered2()$source,
             "<br>",
             "Site:",
             water_data_filtered2()$Site
@@ -464,7 +484,7 @@ server <-  function(input, output, session){
     combined(bind_rows(combined(),
                        filtered_df() %>% 
                          #df() %>% filter(key %in% filtered_df()$key) %>%
-                         filter(Site == input$map1_marker_click))) 
+                         filter(Site %in% input$map1_marker_click))) 
     
     
     #df(df() %>% filter(!key %in% filtered_df()$key))
