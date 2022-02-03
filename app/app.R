@@ -16,16 +16,20 @@ camPeak_simple <- readRDS("data/camPeakSimple.RDS")
 weather_data <- readRDS("data/weather_update.RDS") %>% 
   rename(Site = id, Date = date, long = longitude, lat = latitude) %>% 
   mutate(source = "NOAA") %>% 
-  mutate(p = if_else(!(is.na(Precipitation)), "Precipitation", "")) %>% 
-  mutate(s = if_else(!(is.na(Snowfall)), "Snow", "")) %>% 
-  mutate(sd = if_else(!(is.na(Snow_depth)), "Snow", "")) %>% 
-  mutate(mt = if_else(!(is.na(Minimum_temp)), "Temperature", "")) %>% 
-  mutate(mt2 = if_else(!(is.na(Maximum_temp)), "Temperature", "")) %>%
-  mutate(at = if_else(!(is.na(Average_temp)), "Temperature", "")) %>% 
-  mutate(data_available = paste(p,s,sd,mt,mt2,at))
+  mutate(precip = if_else(!(is.na(Precipitation)), "Precipitation", ""),
+         temp = if_else(if_any(c("Average_temp", "Maximum_temp", "Minimum_temp"), ~!is.na(.)), "Temperature", ""),
+         snow = if_else(if_any(c("Snowfall", "Snow_depth"), ~!is.na(.)), "Snow", ""),
+         data_available = paste(precip, temp, snow))
+  
+  # mutate(s = if_else(!(is.na(Snowfall)), "Snow", "")) %>% 
+  # mutate(sd = if_else(!(is.na(Snow_depth)), "Snow", "")) %>% 
+  # mutate( = if_else(!(is.na(Minimum_temp)), "Temperature", "")) %>% 
+  # mutate(mt2 = if_else(!(is.na(Maximum_temp)), "Temperature", "")) %>%
+  # mutate(at = if_else(!(is.na(Average_temp)), "Temperature", "")) %>% 
+  #mutate(data_available = paste(p,s,sd,mt,mt2,at))
   
   
-qual_vars <- c("water_temp_C", "Chla", "Turbidity", "DOC", "DTN", "pH",
+qual_vars <- c("water_temp_C", "Chla", "Turbidity", "Conductivity", "DOC", "DTN", "pH",
                "ANC", "SC", "Na", "NH4", "K", "Mg", "Ca", "F", "Cl",
                "NO3", "PO4", "SO4")
 
@@ -41,6 +45,7 @@ water_data <- readRDS("data/water_data_update.RDS") %>% arrange(Date) %>%
   # mutate(d2 = if_else(!(is.na(DO)), "Water Quality", "")) %>% 
   # mutate(c = if_else(!(is.na(Conductivity)), "Water Quality", "")) %>% 
   # mutate(category = paste(p,s,d,t,p2,d2,c)) 
+  mutate(Snow_depth = Snow_depth*10) %>% 
   mutate(p = if_else(!(is.na(precip_mm)), "Precipitation", ""),
          temp = if_else(if_any(c("Average_temp", "Soil_temp"), ~!is.na(.)), "Temperature", ""),
          stream = if_else(if_any(c("stage_cm", "discharge_Ls"), ~!is.na(.)), "Streamflow", ""),
@@ -56,14 +61,28 @@ data_avail <- water_data %>% group_by(Site) %>%
   mutate(data_available = paste(p, stream, temp, snow, wq)) %>% 
   dplyr::select(Site, data_available)
 
+# get available data for each weather site
+data_avail_weather <- weather_data %>% group_by(Site) %>% 
+  summarise(across(c("precip","snow","temp"), ~paste(unique(.), collapse = ""))) %>% 
+  mutate(data_available = paste(precip, snow, temp)) %>% 
+  dplyr::select(Site, data_available)
 
-sites <- water_data %>% distinct(Site, .keep_all = TRUE) %>% dplyr::select(Site, source, long, lat) %>% 
-  left_join(data_avail, by = "Site")
+#combine water and weather sites for table
+
+sites_water <- water_data %>% distinct(Site, .keep_all = TRUE) %>% dplyr::select(Site, source, long, lat) %>% 
+  left_join(data_avail, by = "Site") 
+
+sites_weather <- weather_data %>% distinct(Site, .keep_all = TRUE) %>% dplyr::select(Site, source, long, lat) %>% 
+  left_join(data_avail_weather, by = "Site") 
+
+sites <- bind_rows(sites_water, sites_weather)
 
 #clean up, remove extra columns from weather and water data
-weather_data <- weather_data %>% dplyr::select(-c(p,s,sd,mt,mt2,at))
+weather_data <- weather_data %>% dplyr::select(-c(precip, snow, temp))
 
-water_data <- water_data %>% dplyr::select(-c(p, temp, stream, snow, wq))
+water_data <- water_data %>% dplyr::select(-c(p, temp, stream, snow, wq)) %>% 
+  rename(Precipitation = precip_mm)
+
 
 
 #from shinyTime:
@@ -115,8 +134,8 @@ ui <- navbarPage(
                br(),
                br(),
                pickerInput("sourceChoice", "Filter by Source:",
-                          choices = c("CSU_Kampf", "CSU_Ross", "FoCo", "USFS", "USGS"),
-                          selected = c("CSU_Kampf", "CSU_Ross", "FoCo", "USFS", "USGS"),
+                          choices = c("CSU_Kampf", "CSU_Ross", "FoCo", "USFS", "USGS", "NOAA"),
+                          selected = c("CSU_Kampf", "CSU_Ross", "FoCo", "USFS", "USGS", "NOAA"),
                           multiple = TRUE),
                checkboxGroupButtons(
                  inputId = "varChoice",
@@ -145,24 +164,27 @@ ui <- navbarPage(
                           width = '100%'
                           
                         ),
-                        p(strong("Precipitation")),
-                        
+                        #p(strong("Precipitation")),
+                        selectInput("precipVar",
+                                    "Precipitation/Snow",
+                                    choices = c(
+                                      "Precipitation",
+                                      "Snow Depth" = "Snow_depth",
+                                      "Snowfall"
+                                    )),
                         plotlyOutput("precip", width = "100%", height = 160),
                        
                         selectInput(
-                          "weatherVar",
-                          "NOAA Weather Stations",
+                          "tempVar",
+                          "Temperature",
                           choices = c(
-                            "Precipitation",
-                            "Snowfall",
-                            "Snow Depth" = "Snow_depth",
+                            "Average Temperature" = "Average_temp",
                             "Minimum Temperature" = "Minimum_temp",
                             "Maximum Temperature" = "Maximum_temp",
-                            "Average Temperature" = "Average_temp"
-                          ),
-                          selected = "Snowfall"
+                            "Soil Temperature" = "Soil_temp"
+                          )
                         ),
-                        plotlyOutput("noaa", width = "100%", height = 190),
+                        plotlyOutput("temp", width = "100%", height = 190),
                         selectInput(
                           "streamVar",
                           "Streamflow",
@@ -174,7 +196,8 @@ ui <- navbarPage(
                         selectInput(
                           "qual",
                           "Water Quality",
-                          choices = all_of(qual_vars)
+                          choices = all_of(qual_vars),
+                          selected = "Turbidity"
                           
                         ),
                         plotlyOutput("waterQual", width = "100%", height = 190),
@@ -259,7 +282,8 @@ server <-  function(input, output, session){
       return(weather_data %>% filter(is.na(data_available)))
     
     weather_data %>% 
-      rename(variable = input$weatherVar) %>% 
+      #rename(variable = input$weatherVar) %>% 
+      filter(source %in% input$sourceChoice) %>% 
       filter(Date == input$range & str_detect(data_available, paste(input$varChoice, collapse = "|"))) 
 
   })
@@ -279,7 +303,7 @@ server <-  function(input, output, session){
   water_data_filtered <- reactive({
     
     if(is.null(input$varChoice))
-      return(water_data %>% filter(is.na(data_avail)))
+      return(water_data %>% filter(is.na(data_available)))
     
     water_data %>% filter(source %in% input$sourceChoice) %>% 
       filter(str_detect(data_available, paste(input$varChoice, collapse = "|")))
@@ -481,10 +505,14 @@ server <-  function(input, output, session){
   
   observeEvent(input$map1_marker_click, {
     
-    combined(bind_rows(combined(),
-                       filtered_df() %>% 
-                         #df() %>% filter(key %in% filtered_df()$key) %>%
-                         filter(Site %in% input$map1_marker_click))) 
+    combined(
+      bind_rows(combined(),
+                #filtered_df() %>%
+                df() %>%
+                  #df() %>% filter(key %in% filtered_df()$key) %>%
+                  filter(Site %in% input$map1_marker_click)) 
+      
+    )
     
     
     #df(df() %>% filter(!key %in% filtered_df()$key))
@@ -501,8 +529,15 @@ server <-  function(input, output, session){
   })
   
   final_df <- reactive({
-    combined() %>% rename(streamflow = input$streamVar, quality = input$qual,
-                          weather = input$weatherVar) %>% 
+    combined() %>% rename(
+      streamflow = input$streamVar,
+      quality = input$qual,
+      precip = input$precipVar,
+      temp = input$tempVar
+    ) %>%
+      filter(as.Date(Date) >= input$range[1] &
+               as.Date(Date) <= input$range[2]) %>%
+      
       arrange(Date)
     
   })
@@ -515,16 +550,81 @@ server <-  function(input, output, session){
     if(nrow(combined()) == 0)
       return(NULL)
     
+    if(input$precipVar == "Precipitation"){
+      
+      plotly::plot_ly() %>%
+        add_bars(x = final_df()$Date, y = final_df()$precip, name = ~ final_df()$Site,
+                 color = ~ final_df()$Site) %>%
+        plotly::layout(yaxis = list(title = "P (mm)", autorange = "reversed"),
+                       xaxis = list(range = c(input$range[1], input$range[2]),
+                                    showgrid = TRUE),
+                       legend = list(orientation = "h", x = 0.01, y = 1.4))
+    }else {
+      
+      plot_ly(final_df()) %>%
+        add_trace(x = final_df()$Date,
+                  y = final_df()$precip,
+                  name = ~ final_df()$Site,
+                  linetype = ~ final_df()$Site,
+                  mode = "lines+markers") %>%
+        plotly::layout(yaxis = list(title = paste(input$precipVar, "mm"), range = list(0, max(final_df()$precip))),
+                       xaxis = list(range = c(input$range[1], input$range[2]),
+                                    showgrid = T),
+                       legend = list(orientation = "h", x = 0.01, y = 1.2))
+      
+      
+    }
     
-    plotly::plot_ly() %>% 
-      add_bars(x = combined()$Date, y = combined()$precip_mm, name = ~combined()$Site,
-               color = ~ combined()$Site) %>% 
-      plotly::layout(yaxis = list(title = "P (mm)", autorange = "reversed"),
-                     xaxis = list(range = c(input$range[1], input$range[2]),
-                                  showgrid = TRUE),
-                     legend = list(orientation = "h", x = 0.01, y = 1.4))
+    
+    
+    # plotly::plot_ly() %>% 
+    #   add_bars(x = combined()$Date, y = combined()$precip_mm, name = ~combined()$Site,
+    #            color = ~ combined()$Site) %>% 
+    #   plotly::layout(yaxis = list(title = "P (mm)", autorange = "reversed"),
+    #                  xaxis = list(range = c(input$range[1], input$range[2]),
+    #                               showgrid = TRUE),
+    #                  legend = list(orientation = "h", x = 0.01, y = 1.4))
     
   })
+  
+  output$temp <- renderPlotly({
+    
+    if(nrow(combined()) == 0)
+      return(NULL)
+    # 
+    # if(!(input$weatherVar %in% names(combined())))
+    #   return(NULL)
+    
+    
+    # if(input$weatherVar == "Precipitation"){
+    #   
+    #   plotly::plot_ly() %>%
+    #     add_bars(x = final_df()$Date, y = final_df()$weather, name = ~ final_df()$Site,
+    #              color = ~ final_df()$Site) %>%
+    #     plotly::layout(yaxis = list(title = "P (mm)", autorange = "reversed"),
+    #                    xaxis = list(range = c(input$range[1], input$range[2]),
+    #                                 showgrid = TRUE),
+    #                    legend = list(orientation = "h", x = 0.01, y = 1.4))
+    # }else {
+    #   
+      plot_ly(final_df()) %>%
+        add_trace(x = final_df()$Date,
+                  y = final_df()$temp,
+                  name = ~ final_df()$Site,
+                  linetype = ~ final_df()$Site,
+                  mode = "lines+markers") %>%
+        plotly::layout(yaxis = list(title = paste(input$tempVar, "C"), range = list(0, max(final_df()$temp))),
+                       xaxis = list(range = c(input$range[1], input$range[2]),
+                                    showgrid = T),
+                       legend = list(orientation = "h", x = 0.01, y = 1.2))
+      
+      
+    #}
+    
+    
+    
+  })
+  
   
   output$q <- renderPlotly({
     
@@ -574,42 +674,6 @@ server <-  function(input, output, session){
   
   
   
-  output$noaa <- renderPlotly({
-    
-    if(nrow(combined()) == 0)
-      return(NULL)
-    
-    if(!(input$weatherVar %in% names(combined())))
-      return(NULL)
-    
-    
-    if(input$weatherVar == "Precipitation"){
-      
-      plotly::plot_ly() %>%
-        add_bars(x = final_df()$Date, y = final_df()$weather, name = ~ final_df()$Site,
-                 color = ~ final_df()$Site) %>%
-        plotly::layout(yaxis = list(title = "P (mm)", autorange = "reversed"),
-                       xaxis = list(range = c(input$range[1], input$range[2]),
-                                    showgrid = TRUE),
-                       legend = list(orientation = "h", x = 0.01, y = 1.4))
-    }else {
-      
-      plot_ly(final_df()) %>%
-        add_trace(x = final_df()$Date,
-                  y = final_df()$weather,
-                  name = ~ final_df()$Site,
-                  mode = "lines+markers") %>%
-        plotly::layout(yaxis = list(title = input$weatherVar, range = list(0, max(final_df()$weather))),
-                       xaxis = list(range = c(input$range[1], input$range[2]),
-                                    showgrid = T),
-                       legend = list(orientation = "h", x = 0.01, y = 1.2))
-      
-      
-    }
-    
-    
-    
-  })
   
   
   observeEvent(input$clear, {
