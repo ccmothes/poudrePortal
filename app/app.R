@@ -558,6 +558,7 @@ server <-  function(input, output, session){
         plotly::layout(yaxis = list(title = "P (mm)", autorange = "reversed"),
                        xaxis = list(range = c(input$range[1], input$range[2]),
                                     showgrid = TRUE),
+                       showlegend = TRUE,
                        legend = list(orientation = "h", x = 0.01, y = 1.4))
     }else {
       
@@ -570,6 +571,7 @@ server <-  function(input, output, session){
         plotly::layout(yaxis = list(title = paste(input$precipVar, "mm"), range = list(0, max(final_df()$precip))),
                        xaxis = list(range = c(input$range[1], input$range[2]),
                                     showgrid = T),
+                       showlegend = TRUE,
                        legend = list(orientation = "h", x = 0.01, y = 1.2))
       
       
@@ -616,6 +618,7 @@ server <-  function(input, output, session){
         plotly::layout(yaxis = list(title = paste(input$tempVar, "C"), range = list(0, max(final_df()$temp))),
                        xaxis = list(range = c(input$range[1], input$range[2]),
                                     showgrid = T),
+                       showlegend = TRUE,
                        legend = list(orientation = "h", x = 0.01, y = 1.2))
       
       
@@ -642,6 +645,7 @@ server <-  function(input, output, session){
       plotly::layout(yaxis = list(title = input$streamVar),
                      xaxis = list(range = c(input$range[1], input$range[2]),
                                   showgrid = T),
+                     showlegend = TRUE,
                      legend = list(orientation = "h", x = 0.01, y = 1.2))
 
     
@@ -663,11 +667,14 @@ server <-  function(input, output, session){
                 y = final_df()$quality,
                 name = ~final_df()$Site,
                 mode = 'lines+markers',
-                linetype = ~ final_df()$Site) %>%
+                linetype = ~ final_df()$Site,
+                connectgaps = TRUE) %>%
       plotly::layout(yaxis = list(title = input$qual),
                      xaxis = list(range = c(input$range[1], input$range[2]),
                                   showgrid = T),
-                     legend = list(orientation = "h", x = 0.01, y = 1.2))
+                     showlegend = TRUE,
+                     legend = list(orientation = "h", 
+                                   x = 0.01, y = 1.2))
     
     
   })
