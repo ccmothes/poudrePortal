@@ -223,6 +223,9 @@ foco_data_refined <- foco_data %>% left_join(foco_coords, by = "Site") %>%
   dplyr::select(Site, source, Date, lat, long, precip_mm, stage_cm, discharge_Ls,
                 Turbidity = turbidity, pH, DO, Conductivity = conductivity)
 
+#save this to send to katie
+write.csv(foco_data_refined, "data/foco_data_clean.csv")
+
 #test out plotly
 test <- foco_data %>% 
   filter(Site == "Poudre_River_Mouth")
