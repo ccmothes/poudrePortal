@@ -1,0 +1,3 @@
+site,equation,coeff_a,coeff_b,coeff_c
+mill,a*stage^2+b*(stage^2)^2,-0.008497,3.35E-05,
+greyrock,a*(1-exp(-stage/c)^b),7531.97,7.772,72.306

@@ -1,0 +1,64 @@
+Site_names,
+aspen,catchment near Aspen Glenn campground
+bighorn,Bighorn Creek catchment
+bl4,"Tributary intersecting Blue Lake Trail, BL4 stream tracker site"
+dadd,Dadd Gulch catchment
+dry,Dry Creek catchment
+greyrock,Greyrock Creek catchment
+hewlett,Hewlett Gulch catchment
+hill,Hill Gulch catchment
+joewright,Joe Wright SNOTEL
+joewright_burn,weather station at burned location near Joe Wright Reservoir
+michigan,Michigan River catchment
+michiganditch,"Tributary to Michigan Ditch, MD3 stream tracker site"
+mill,Mill Creek catchment
+montgomery,Montgomery Creek catchment
+mtcampus,"CSU mountain campus - this site has two weather stations, one in a clearing and another in a forest. Columns with _f are in the forest"
+skin,Skin Gulch catchment
+tunnel,"Tunnel Creek catchment, above Laramie-Poudre Tunnel"
+washout,Washout Gulch catchment
+,
+Measurement_types,
+P_mm,"tipping bucket rain gauge, depth in mm"
+snow,snow depth (cm)
+Ts_5,soil temperature (C) with number indicating depth (cm) below surface
+VWC_5,"volumetric water content (fraction), with number indicating depth (cm) below surface"
+Ta,air temperature (C) 
+RH,relative humidity (fraction)
+u,wind speed (m/s)
+u_dir,wind direction (deg)
+Rn_NRLite,net radiation (W/m^2) from a NRLite net radiometer
+4R,4-component radiometer (W/m^2)
+Rs_in,incoming shortwave radiation (W/m^2)
+Rs_out,outgoing shortwave radiation (W/m^2)
+Rl_in,incoming longwave radiation (W/m^2)
+Rl_out,outgoing longwave radiation (W/m^2)
+stage,stream stage (cm)
+Q_mm,"stream discharge, normalized by catchment area (mm)"
+baro,barometric pressure (kPa)
+,
+Sensor_model,
+TE525,"Texas Electronics tipping bucket rain gauge, 0.3 mm per tip"
+Rainwise,"Rainwise tipping bucket rain gauge, 0.3 mm per tip"
+EC-TM,Decagon soil moisture and temperature sensor
+EC-5,Decagon soil moisture sensor
+WT-HR1000,TruTrak capacitance rod
+U20-L,Hobo pressure transducer
+RuggedTroll,"In Situ Rugged Troll pressure transducer, sensor noise +/- 2 cm"
+HMP45C,Vaisala temperature and relative humidity
+HMP50-L,Vaisala temperature and relative humidity
+TCAV,"averaging thermocouple, Campbell Scientific"
+NR-Lite,net radiometer
+SN-500,Apogee 4-component radiometer
+SM300,Delta-T soil moisture and temperature sensor
+SM150,Delta-T soil moisture sensor
+CS215,Campbell Scientific temperature and relative humidity sensor
+109-L,Campbell Scientific temperature sensor
+HC2S3,Rotronic HydroGen2 air temperature and relative humidity
+014a,Campbell Scientific 3-cup anemometer
+SR50A,sonic snow depth sensor
+05108,RM Young wind monitor
+HygroVUE5,Campbell Scientific temperature and relative humidity sensor
+Setra 278,Barometric pressure sensor
+SoilVUE10,Campbell Scientific TDR soil moisture and temperature profile sensor
+A2,sonic snow depth sensor

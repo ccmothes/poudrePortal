@@ -70,7 +70,7 @@ watersheds <- read_sf("data/watersheds.shp")
 
 saveRDS(daily_data, "data/daily_data.RDS")
 
-#UPDATE tie data to sensor coordinates (kicked out soil temp sensor info)
+## UPDATE tie data to sensor coordinates (kicked out soil temp sensor info) -------------
 
 daily_data <- readRDS("data/daily_data.RDS")
 
@@ -85,8 +85,6 @@ daily_data_refined <- daily_data %>%
   # I think... ASK STEPHANIE
   select(Site, source, Date, long, lat, Snow_depth = Snow_depth_cm, precip_mm = P_mm, stage_cm = Stage_cm,
          discharge_Ls = Discharge_Ls, Average_temp = Ta_C, Soil_temp = Ts_C) 
-
-  
 
 
 # CSU - Matt Ross Reservoir Data -----------------------------------------------
