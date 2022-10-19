@@ -45,21 +45,36 @@ data_avail_weather <- weather_data %>% group_by(Site) %>%
 
 #combine water and weather sites for table, add date range
 
-sites_water <- water_data %>%
+sites_water <- 
+  water_data %>%
   group_by(Site) %>%
   mutate(start_date = min(Date),
          end_date = max(Date)) %>%
   ungroup() %>%
-  distinct(Site, .keep_all = TRUE) %>% dplyr::select(Site, source, long, lat, start_date, end_date) %>%
+  distinct(Site, .keep_all = TRUE) %>% 
+  dplyr::select(Site, source, long, lat, start_date, end_date) %>%
   left_join(data_avail_water, by = "Site")
 
-sites_weather <- weather_data %>% distinct(Site, .keep_all = TRUE) %>% dplyr::select(Site, source, long, lat) %>% 
-  left_join(data_avail_weather, by = "Site") 
+sites_weather <-
+  weather_data %>% 
+  group_by(Site) %>%
+  mutate(start_date = min(Date),
+         end_date = max(Date)) %>%
+  ungroup() %>% 
+  distinct(Site, .keep_all = TRUE) %>% 
+  dplyr::select(Site, source, long, lat, start_date, end_date) %>%
+  left_join(data_avail_weather, by = "Site")
 
 sites <- bind_rows(sites_water, sites_weather)
+
+saveRDS(sites, "app/data/sites_table.RDS")
 
 #clean up, remove extra columns from weather and water data
 weather_data <- weather_data %>% dplyr::select(-c(precip, snow, temp))
 
 water_data <- water_data %>% dplyr::select(-c(p, temp, stream, snow, wq)) %>% 
   rename(Precipitation = precip_mm)
+
+saveRDS(weather_data, "app/data/weather_app.RDS")
+saveRDS(water_data, "app/data/water_app.RDS")
+

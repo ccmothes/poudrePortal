@@ -12,77 +12,14 @@ library(stringr)
 
 camPeak_simple <- readRDS("data/camPeakSimple.RDS")
 
-
-weather_data <- readRDS("data/weather_update.RDS") %>% 
-  rename(Site = id, Date = date, long = longitude, lat = latitude) %>% 
-  mutate(source = "NOAA") %>% 
-  mutate(precip = if_else(!(is.na(Precipitation)), "Precipitation", ""),
-         temp = if_else(if_any(c("Average_temp", "Maximum_temp", "Minimum_temp"), ~!is.na(.)), "Temperature", ""),
-         snow = if_else(if_any(c("Snowfall", "Snow_depth"), ~!is.na(.)), "Snow", ""),
-         data_available = paste(precip, temp, snow))
-  
-  # mutate(s = if_else(!(is.na(Snowfall)), "Snow", "")) %>% 
-  # mutate(sd = if_else(!(is.na(Snow_depth)), "Snow", "")) %>% 
-  # mutate( = if_else(!(is.na(Minimum_temp)), "Temperature", "")) %>% 
-  # mutate(mt2 = if_else(!(is.na(Maximum_temp)), "Temperature", "")) %>%
-  # mutate(at = if_else(!(is.na(Average_temp)), "Temperature", "")) %>% 
-  #mutate(data_available = paste(p,s,sd,mt,mt2,at))
-  
-  
 qual_vars <- c("water_temp_C", "Chla", "Turbidity", "Conductivity", "DOC", "DTN", "pH",
                "ANC", "SC", "Na", "NH4", "K", "Mg", "Ca", "F", "Cl",
                "NO3", "PO4", "SO4")
 
-#read in updated file
-water_data <- readRDS("data/water_data_update.RDS") %>% arrange(Date) %>% 
-  #mutate(source_spec = if_else(source == "CSU_Kampf", "CSU-Stephanie Kampf", source)) %>%
-  #mutate(source = if_else(source == "CSU_Kampf", "CSU", source)) %>% 
-  # mutate(p = if_else(!(is.na(precip_mm)), "Precipitation", "")) %>% 
-  # mutate(s = if_else(!(is.na(stage_cm)), "Streamflow", "")) %>% 
-  # mutate(d = if_else(!(is.na(discharge_Ls)), "Streamflow", "")) %>% 
-  # mutate(t = if_else(!(is.na(Turbidity)), "Water Quality", "")) %>% 
-  # mutate(p2 = if_else(!(is.na(pH)), "Water Quality", "")) %>% 
-  # mutate(d2 = if_else(!(is.na(DO)), "Water Quality", "")) %>% 
-  # mutate(c = if_else(!(is.na(Conductivity)), "Water Quality", "")) %>% 
-  # mutate(category = paste(p,s,d,t,p2,d2,c)) 
-  mutate(Snow_depth = Snow_depth*10) %>% 
-  mutate(p = if_else(!(is.na(precip_mm)), "Precipitation", ""),
-         temp = if_else(if_any(c("Average_temp", "Soil_temp"), ~!is.na(.)), "Temperature", ""),
-         stream = if_else(if_any(c("stage_cm", "discharge_Ls"), ~!is.na(.)), "Streamflow", ""),
-         snow = if_else(!(is.na(Snow_depth)), "Snow", ""),
-         wq = if_else(if_any(qual_vars, ~!is.na(.)), "Water Quality", ""),
-         data_available = paste(p, temp, stream, snow, wq))
-  
-  
-  
-# get available data for each site
-data_avail <- water_data %>% group_by(Site) %>% 
-  summarise(across(c("p","stream", "temp", "snow", "wq"), ~paste(unique(.), collapse = ""))) %>% 
-  mutate(data_available = paste(p, stream, temp, snow, wq)) %>% 
-  dplyr::select(Site, data_available)
-
-# get available data for each weather site
-data_avail_weather <- weather_data %>% group_by(Site) %>% 
-  summarise(across(c("precip","snow","temp"), ~paste(unique(.), collapse = ""))) %>% 
-  mutate(data_available = paste(precip, snow, temp)) %>% 
-  dplyr::select(Site, data_available)
-
-#combine water and weather sites for table
-
-sites_water <- water_data %>% distinct(Site, .keep_all = TRUE) %>% dplyr::select(Site, source, long, lat) %>% 
-  left_join(data_avail, by = "Site") 
-
-sites_weather <- weather_data %>% distinct(Site, .keep_all = TRUE) %>% dplyr::select(Site, source, long, lat) %>% 
-  left_join(data_avail_weather, by = "Site") 
-
-sites <- bind_rows(sites_water, sites_weather)
-
-#clean up, remove extra columns from weather and water data
-weather_data <- weather_data %>% dplyr::select(-c(precip, snow, temp))
-
-water_data <- water_data %>% dplyr::select(-c(p, temp, stream, snow, wq)) %>% 
-  rename(Precipitation = precip_mm)
-
+#read in updated files
+weather_data <- readRDS("data/weather_app.RDS")
+water_data <- readRDS("data/water_app.RDS")
+sites <- readRDS("data/sites_table.RDS")
 
 
 #from shinyTime:
