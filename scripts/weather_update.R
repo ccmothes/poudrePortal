@@ -7,7 +7,7 @@ options(noaakey = "VAOckuKZRAFPIOuippCpMBAUPTiAtVMn")
 
 stations <- readRDS("data/location_stations.RDS")
 
-weather_data <- readRDS("data/weather_data.RDS")
+weather_data <- readRDS("data/weather_update.RDS")
 
 #delete cached data
 ghcnd_cache$delete_all()
@@ -21,10 +21,13 @@ weather_data_new <- meteo_pull_monitors(stations$id, date_min = max(weather_data
 
 weather_update <- bind_rows(weather_data, weather_data_new) %>% left_join(stations, by = "id") %>%
   mutate(Precipitation = prcp*0.1,
-         Minimum_temp = tmin*0.1, Maximum_temp = tmax*0.1, Average_temp = tavg*0.1) %>% 
-  dplyr::select(id, date, Precipitation, Snowfall = snow, Snow_depth = snwd,
-                Minimum_temp, Maximum_temp, Average_temp, latitude,
-                longitude)
+         Minimum_temp = tmin*0.1,
+         Maximum_temp = tmax*0.1, 
+         Average_temp = tavg*0.1,
+         source = "NOAA") %>% 
+  dplyr::select(Site = id, Date = date, Precipitation, Snowfall = snow, Snow_depth = snwd,
+                Minimum_temp, Maximum_temp, Average_temp, lat = latitude,
+                long = longitude)
 
 
 

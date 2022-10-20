@@ -7,10 +7,8 @@ library(stringr)
 # clean datasets to add availble data and date range column for table
 
 weather_data <- readRDS("app/data/weather_update.RDS") %>% 
-  rename(Site = id, Date = date, long = longitude, lat = latitude) %>% 
-  mutate(source = "NOAA") %>% 
   mutate(precip = if_else(!(is.na(Precipitation)), "Precipitation", ""),
-         temp = if_else(if_any(c("Average_temp", "Maximum_temp", "Minimum_temp"), ~!is.na(.)), "Temperature", ""),
+         temp = if_else(if_any(c("Average_temp", "Maximum_temp", "Minimum_temp", "Soil_temp"), ~!is.na(.)), "Temperature", ""),
          snow = if_else(if_any(c("Snowfall", "Snow_depth"), ~!is.na(.)), "Snow", ""),
          data_available = paste(precip, temp, snow))
 

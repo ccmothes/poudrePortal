@@ -38,6 +38,7 @@ dateToTimeList <- function(value){
 ui <- navbarPage(
   theme = bslib::bs_theme(
     bootswatch = "flatly",
+    version = 4,
     #bg = "#FFFFFF",
     #fg = "#000",
     primary = "#186D03",
@@ -71,8 +72,8 @@ ui <- navbarPage(
                br(),
                br(),
                pickerInput("sourceChoice", "Filter by Source:",
-                          choices = c("CSU_Kampf", "CSU_Ross", "FoCo", "USFS", "USGS", "NOAA"),
-                          selected = c("CSU_Kampf", "CSU_Ross", "FoCo", "USFS", "USGS", "NOAA"),
+                          choices = c("CSU_Kampf", "CSU_Ross", "FoCo", "USFS", "USGS", "NOAA", "SNOTEL"),
+                          selected = c("CSU_Kampf", "CSU_Ross", "FoCo", "USFS", "USGS", "NOAA", "SNOTEL"),
                           multiple = TRUE),
                checkboxGroupButtons(
                  inputId = "varChoice",
@@ -191,7 +192,8 @@ ui <- navbarPage(
             "Snow Depth" = "Snow_depth",
             "Minimum Temperature" = "Minimum_temp",
             "Maximum Temperature" = "Maximum_temp",
-            "Average Temperature" = "Average_temp"
+            "Average Temperature" = "Average_temp",
+            "Soil Temperature" = "soil_temp"
           )
         ),
         em("Click on a station to view raw values. Data last updated 1/25/22"),
@@ -227,7 +229,7 @@ server <-  function(input, output, session){
   
   weather2 <- reactive({
     weather_data %>% filter(Date == input$date) %>%
-      dplyr::select(Date, Site, lat, long, variable = input$variable) %>%
+      dplyr::select(Date, Site, source, lat, long, variable = input$variable) %>%
       filter(!is.na(variable))
   })
   
@@ -263,6 +265,7 @@ server <-  function(input, output, session){
   
 
   pal <- colorFactor(palette = "Spectral", water_data$source)
+  pal_weather <- colorFactor(palette = c("black", "grey70"), weather_data$source)
   
   output$map1 <- leaflet::renderLeaflet({
     leaflet() %>%
@@ -297,7 +300,9 @@ server <-  function(input, output, session){
         group = "Cameron Peak Fire",
         options = pathOptions(pane = "fire")
       ) %>%
-    addLegend("topright", data = weather_data, colors = "black", group = "Weather Stations", labels = "NOAA Weather Stations") %>% 
+    addLegend("topright", data = weather_data, values = ~source, 
+             pal = pal_weather, labels = c("NOAA", "SNOTEL"),
+              group = "Weather Stations", title = "Weather Stations") %>% 
     
       addLegend("topright", data = water_data, values = ~source, 
                 pal = pal, title = "Data source") %>% 
@@ -343,11 +348,14 @@ server <-  function(input, output, session){
       lat = ~ lat,
       radius = 4,
         color = "black",
-        fillColor = "gray50",
+        fillColor = ~pal_weather(source),
+        #fillColor = "gray50",
         stroke = TRUE,
         weight = 1,
-        fillOpacity = 0.6,
-        popup = paste("Station:", weather1()$Site
+        fillOpacity = 0.85,
+        popup = paste("Station:", weather1()$Site,
+                      "<br>",
+                      "Source:", weather1()$source
         ),
         group = "Weather Stations",
         options = pathOptions(pane = "weather")) %>%
@@ -389,6 +397,7 @@ server <-  function(input, output, session){
                 fillOpacity = 1,
                 fillColor = "black",
                 popup = paste("Station:", weather2()$Site, "<br>",
+                              'Source:', weather2()$source, "<br>",
                               paste0(input$variable, ":"), weather2()$variable,
                               if(input$variable %in% c("Precipitation", "Snowfall",
                                                        "Snow_depth")) {"mm"} else {"degrees Celcius"}
@@ -667,7 +676,7 @@ server <-  function(input, output, session){
         ) %>%
         addScaleBar(position = "bottomright") %>%
         addLegend("topright", data = weather_data, colors = "black", 
-                  labels = "NOAA Weather Stations") %>% 
+                  labels = "Weather Stations") %>% 
         
         addLegend(pal = colorNumeric(palette = c("#646464", "#04e9e7", "#019ff4", "#0300f4",
                                                  "#02fd02", "#01c501", "#008e00", "#fdf802",

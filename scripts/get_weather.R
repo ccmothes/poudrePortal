@@ -3,6 +3,7 @@
 library(tidyverse)
 library(raster)
 library(leaflet)
+library(sf)
 
 #noaa data --------------------------------------------
 
@@ -159,4 +160,49 @@ leaflet() %>%
   )
 
 
+
+# SNOTEL station data ---------------------------------------
+library(soilDB)
+sf::sf_use_s2(FALSE)
+source("scripts/getSNOTEL.R")
+
+# use cam peak polygon as boundary/aoi
+camPeak_box <- readRDS("data/camPeakSimple.RDS") %>% 
+  st_bbox() %>% 
+  st_as_sfc() %>% 
+  st_as_sf() %>% 
+  st_transform(4326)
+
+#test to decide which buffer distance to use
+aoi <- camPeak_box %>%
+  sf::st_buffer(dist = 0.25)
+
+
+snotel <- getSNOTEL(camPeak_box, dist = 0.25, years = 2016:2022)
+
+#clean snotel
+snotel_clean <- snotel %>% 
+  #filter relevant vars
+  filter(sensor.id %in% c("STO.I_2", "TAVG.D", "TMIN.D", "TMAX.D", "PREC.I", "SNWD.I")) %>%
+  #convert geometry to lat/long
+  mutate(long = unlist(map(geometry,1)),
+         lat = unlist(map(geometry,2))) %>% 
+  st_drop_geometry() %>% 
+  pivot_wider(names_from = "sensor.id", values_from = "value") %>% 
+  #convert precip and snow to cm from in
+  mutate(Precipitation = PREC.I * 2.54,
+         Snow_depth = SNWD.I * 2.54) %>% 
+  #select and rename columns to match big dataset
+  dplyr::select(Site = Name, source = Network, Date, Average_temp = TAVG.D,
+                Minimum_temp = TMIN.D, Maximum_temp = TMAX.D, Snow_depth,
+                Soil_temp = STO.I_2, Precipitation, long, lat)
+
+## bind to current weather data
+weather_data <- readRDS("app/data/weather_update.RDS")
+
+weather_update <- bind_rows(weather_data, snotel_clean)
+
+#update weather file
+saveRDS(weather_update, "app/data/weather_update.RDS")
+saveRDS(weather_update, "app/data/weather_update.RDS")
 
