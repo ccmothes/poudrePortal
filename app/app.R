@@ -1,4 +1,4 @@
-#time loop test
+#Set up ------------------------------
 
 library(shiny)
 library(bslib)
@@ -33,7 +33,7 @@ dateToTimeList <- function(value){
 }
 
 
-
+# ui ----------------------------------------------------
 
 ui <- navbarPage(
   theme = bslib::bs_theme(
@@ -41,17 +41,19 @@ ui <- navbarPage(
     version = 4,
     #bg = "#FFFFFF",
     #fg = "#000",
-    primary = "#186D03",
-    secondary = "#DD5B27",
+    primary = "#1E4D2B",
+    secondary = "#D9782D",
     success = "#f28e35",
     base_font = font_google("Cairo")
   ) %>% 
     bslib::bs_add_rules(sass::sass_file("www/style.scss")),
-
   
-  
-  "Poudre Portal Demo",
+  title = HTML("Poudre Portal <em>Beta Version</em>"),
   id = "nav",
+  
+  tabPanel("Home",
+           htmlTemplate("www/homepage.html")
+           ),
   
   tabPanel("Data Explorer",
 
@@ -84,8 +86,8 @@ ui <- navbarPage(
                  individual = TRUE,
                  status = "primary",
                  checkIcon = list(
-                   yes = icon("check-square"),
-                   no = icon("square-o")
+                   yes = icon("square-check"),
+                   no = icon("square")
                  ))
 
                ),
