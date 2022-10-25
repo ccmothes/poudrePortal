@@ -6,14 +6,16 @@
   display: flex;
   width: -webkit-fill-available;
   margin-top: -2em;
-  margin-right: -3em;
+  margin-left: -15px;
+  margin-right: -15px;
+  background-color: #000000;
 }
 
 img.fire-banner {
   width: 100%;
   height: 100%;
-  margin-left: -2em;
-  margin-right: -2em;
+  margin-top: 0.7em;
+  opacity: 0.7;
 }
 
 
@@ -29,18 +31,11 @@ img.fire-banner {
   color: white;
   font-size: 200%;
   text-shadow: 2px 2px 1px #000000;
+  padding-left: 20%;
 }
 
-/*.header {
-  display: grid;
-  background-image: url(stock-photo.png);
-  background-size: cover;
-  margin-right: -1em;
-  margin-left: -1em;
-  margin-top: -2em;
-}*/
 
-/* edit navigation text */
+/* edit section text */
 h5.home {
   text-align: center;
   letter-spacing: 1.5px;
@@ -48,6 +43,109 @@ h5.home {
   padding: 4px 7px 4px 8px;
   margin: 30px;
 }
+
+
+/* set up interactive tool cards */
+.row-tools {
+  display: grid;
+  grid-column-gap: 8%;
+  grid-template-columns: repeat(2, 1fr);
+  flex-wrap: wrap;
+  -webkit-flex-wrap: wrap;
+  margin-right: 15%;
+  margin-left: 15%;
+  justify-items: center;
+}
+
+/* make cards adapt to colum on mobile */
+@media only screen and (max-width: 768px) {
+  .row-tools{
+    display: grid;
+    grid-template-columns: 1fr !important;
+    padding: 1em;
+    grid-row-gap: 10px;
+  }
+}
+
+/* column size/properies for card content */
+.col-tools{
+  display: flex;
+  flex-direction: column;
+  border-radius: 8px;
+  background-color: #fff;
+  box-shadow: 0px 2px 4px 0px #02020280;
+  text-align: center;
+  align-items: center;
+  justify-content: center;
+  padding: 10px;
+  width: 20em;
+}
+
+/* make image fit to card */
+.img-tools {
+  width: 100%;
+  height: 100%;
+}
+
+/* interactive button properties */
+#button_data, #button_weather {
+    color: black;
+    background-color: #d9782de0;
+    border-color: #d9782de0;
+    font-weight: 500;
+    margin: 10px;
+    box-shadow: 8px 8px 8px 5px #0000006b;
+}
+
+#button_data:hover, #button_weather:hover {
+  background-color:#b54f00;
+  transition: 0.7s;
+}
+
+
+/* data stream column cards */
+
+.row-data {
+  display: grid;
+ /* grid-column-gap: 8%; */
+  grid-template-columns: repeat(3, 1fr);
+  flex-wrap: wrap;
+  -webkit-flex-wrap: wrap;
+  /*margin-right: 15%;
+  margin-left: 15%;*/
+  justify-items: center;
+}
+
+/* make cards adapt to colum on mobile */
+@media only screen and (max-width: 768px) {
+  .row-data{
+    display: grid;
+    grid-template-columns: 1fr !important;
+    padding: 1em;
+    grid-row-gap: 10px;
+  }
+}
+
+/* column size/properies for card content */
+.col-data{
+  display: flex;
+  flex-direction: column;
+  /*border-radius: 8px;
+  background-color: #fff;
+  box-shadow: 0px 2px 4px 0px #02020280;*/
+  text-align: center;
+  align-items: center;
+  justify-content: center;
+  padding: 10px;
+  width: 20em;
+}
+
+/* make image fit to card */
+.img-data {
+  width: 50%;
+}
+
+
 
 
 /* Make selection labels bold*/

@@ -51,9 +51,14 @@ ui <- navbarPage(
   title = HTML("Poudre Portal <em>Beta Version</em>"),
   id = "nav",
   
-  tabPanel("Home",
-           htmlTemplate("www/homepage.html")
-           ),
+  tabPanel(
+    "Home",
+    htmlTemplate(
+      "www/homepage.html",
+      button_data = actionButton("button_data", "Data Explorer"),
+      button_weather = actionButton("button_weather", "Weather Explorer")
+    )
+  ),
   
   tabPanel("Data Explorer",
 
