@@ -35,7 +35,8 @@ dateToTimeList <- function(value){
 
 # ui ----------------------------------------------------
 
-ui <- navbarPage(
+ui <- fluidPage (class = "container-all",
+  navbarPage(
   theme = bslib::bs_theme(
     bootswatch = "flatly",
     version = 4,
@@ -49,8 +50,12 @@ ui <- navbarPage(
     bslib::bs_add_rules(sass::sass_file("www/style.scss")),
   
   title = HTML("Poudre Portal <em>Beta Version</em>"),
+  # footer = div(class = "footer",
+  #              includeHTML("www/footer.html")),
+  #footer = tags$footer(includeHTML("www/footer.html")),
   id = "nav",
   
+  # Homepage ------------------------------------------------------------
   tabPanel(
     "Home",
     htmlTemplate(
@@ -59,7 +64,13 @@ ui <- navbarPage(
       button_weather = actionButton("button_weather", "Weather Explorer")
     )
   ),
+  # About --------------------------------------------------------------
+  tabPanel("About",
+           h5("Some about info regarding the project and researchers")
+  ),
   
+  navbarMenu("Explore",
+  # Data Explorer ------------------------------------------------------          
   tabPanel("Data Explorer",
 
            fluidPage(
@@ -152,7 +163,7 @@ ui <- navbarPage(
                       )
                 )
              ))),
-  
+  # Weather Explorer -----------------------------------------------------------
   tabPanel(
     "Weather Explorer",
     
@@ -217,6 +228,15 @@ ui <- navbarPage(
       
     )
   )
+  ),
+  # Fire Stories ---------------------------------------------------------------
+  tabPanel("Fire Stories",
+           h5("Stories, articles, resources etc. related to Colorado wildfires")),
+  # Contact --------------------------------------------------------------------
+  tabPanel("Contact",
+           h5("Contact info here"))
+),
+tags$footer(includeHTML("www/footer.html"))
 )
 
 

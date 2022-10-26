@@ -5,7 +5,8 @@
     <div class="heading-container">
         <img class="fire-banner" src="burnpic.png" alt="Fire Aftermath" />
         <div class="foreground-content">
-          <h2 class="header-title">Explore the environmental impacts of Colorado Wildfires</h2>
+          <h2 class="header-text">Explore the environmental impacts of Colorado Wildfires</h2>
+          <p class = "header-text">A sentence or two description about the project will go here</p>
       </div>
     </div>
     <div class="navigation">
@@ -27,16 +28,25 @@
       <h5 class="home">Data Streams</h5>
       <div class="row-data">
         <div class="col-data">
-          <img class = "img-data" src="usgs.png" alt="USGS Logo" />
-          <p>USGS Hydrologic Data </p>
+          <img class = "img-data" id = "img-usgs" src="usgs.png" alt="USGS Logo" />
+          <p id = "p-usgs">USGS Hydrologic Data </p>
+          <button class="button-data" onclick="https://waterdata.usgs.gov/nwis">
+            Link to USGS water data
+          </button>
         </div>
         <div class="col-data">
-          <img class="img-data" src="noaa.png" alt="NOAA Logo" />
-          <p>NOAA Weather and Radar Data</p>
+          <img class="img-data" id = "img-noaa" src="noaa.png" alt="NOAA Logo" />
+          <p id = "p-noaa">NOAA Weather and Radar Data</p>
+          <button class="button-data" onclick="https://www.ncei.noaa.gov/cdo-web/">
+            Link to NOAA weather data
+          </button>
         </div>
         <div class="col-data">
-          <img class="img-data" src="usda.png" alt="USDA Logo" />
-          <p>USDA SNOTEL Station Data</p>
+          <img class="img-data" id = "img-usda" src="usda.png" alt="USDA Logo" />
+          <p id = "p-usda">USDA SNOTEL Station Data</p>
+          <button class="button-data" onclick="https://www.ncei.noaa.gov/cdo-web/">
+            Link to USDA SNOTEL data
+          </button>
         </div>
       </div>
      </div>
@@ -44,16 +54,38 @@
     <hr style="width:50%"/>
     <div class="researchers">
       <h5 class="home">Research Groups</h5>
+      <div class="row-researchers">
+        <div class="col-researchers">
+          <img class="img-researchers" src="ross.jpg" alt="Matthew Ross" />
+          <br />
+          <button class="button-researchers" onclick="https://matthewrvross.com/">
+            Ross Lab @CSU
+          </button>
+        </div>
+        <div class="col-researchers">
+          <img class="img-researchers" src="kampf.jpg" alt="Stephanie Kampf" />
+          <br />
+          <button class="button-researchers" onclick="https://www.nrel.colostate.edu/investigator/stephanie-kampf-homepage/">
+            Kampf Lab @CSU
+          </button>
+        </div>
+        <div class="col-researchers">
+          <img class="img-researchers" src="crhoades.jpg" alt="Charles C. Rhoades" />
+          <br />
+          <button class="button-researchers" onclick="https://www.fs.usda.gov/rmrs/research-labs/fort-collins-biogeochemistry-laboratory">
+            Chuck Rhoades <br />USFS Biogeochemistry Lab
+          </button>
+        </div>
+        <div class="col-researchers">
+          <img class="img-researchers" src="cofc.png" alt="City of Fort Collins" />
+          <br />
+          <button class="button-researchers" onclick="https://www.fcgov.com/utilities/what-we-do/water/water-quality/source-water-monitoring/">
+            City of Fort Collins <br />Source Water Monitoring
+          </button>
+        </div>
+      </div>
     </div>
     <br />
-   <hr style="width:50%"/>
-    <div class="fire-stuff">
-      <h5 class="home">Fire Stories</h5>
-    </div>
-     <hr style="width:50%" />
-     <div class="logos">
-       
-     </div>
   </body>
 
 
