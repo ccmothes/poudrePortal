@@ -17,7 +17,10 @@ qual_vars <- c("water_temp_C", "Chla", "Turbidity", "Conductivity", "DOC", "DTN"
                "NO3", "PO4", "SO4")
 
 #read in updated files
-weather_data <- readRDS("data/weather_app.RDS")
+weather_data <- readRDS("data/weather_app.RDS") %>% 
+  #remove snotel precip data for now since its cumulative
+  mutate(Precipitation = if_else(source == 'SNOTEL', NA_real_, Precipitation))
+
 water_data <- readRDS("data/water_app.RDS")
 sites <- readRDS("data/sites_table.RDS")
 
@@ -114,8 +117,8 @@ ui <- fluidPage (class = "container-all",
                           "range",
                           "",
                           value = c(as.Date("2020-01-01"), as.Date("2021-10-01")),
-                          min = as.Date("2015-10-01"),
-                          max = as.Date("2021-10-01"),
+                          min = as.Date("2019-01-01"),
+                          max = as.Date("2022-02-01"),
                           timezone = "-0600",
                           width = '100%'
                           
@@ -179,7 +182,7 @@ ui <- fluidPage (class = "container-all",
         sliderInput(
           "date",
           label = "Observation Date:",
-          value = Sys.Date() - 2,
+          value = Sys.Date() - 1,
           min = as.Date("2015-10-01"),
           max = Sys.Date(),
           dragRange = FALSE,
@@ -211,7 +214,7 @@ ui <- fluidPage (class = "container-all",
             "Minimum Temperature" = "Minimum_temp",
             "Maximum Temperature" = "Maximum_temp",
             "Average Temperature" = "Average_temp",
-            "Soil Temperature" = "soil_temp"
+            "Soil Temperature" = "Soil_temp"
           )
         ),
         em("Click on a station to view raw values. Data last updated 1/25/22"),
@@ -223,7 +226,8 @@ ui <- fluidPage (class = "container-all",
                     multiple = TRUE),
         hr(),
         br(),
-        p("Link to Sentinel Explorer", a(href="", "here"), em("(not active yet)"))
+        p(class = "p-sent", "Link to Sentinel Explorer", a(href="https://ccmothes.users.earthengine.app/view/poudreportal-gee", "here"), 
+          br(), em("(Note: this application is slow and still under development)"))
       )
       
     )
@@ -241,6 +245,21 @@ tags$footer(includeHTML("www/footer.html"))
 
 
 server <-  function(input, output, session){
+  
+  #update tabPanels from homepage buttons
+  observeEvent(input$button_data, {
+    
+    updateTabsetPanel(session, "nav",
+                      selected = "Data Explorer")
+
+  })
+  
+  observeEvent(input$button_weather, {
+    
+    updateTabsetPanel(session, "nav",
+                      selected = "Weather Explorer")
+    
+  })
   
   weather1 <- reactive({
     
