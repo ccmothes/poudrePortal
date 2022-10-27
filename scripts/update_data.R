@@ -133,6 +133,28 @@ water_data_update <- bind_rows(dat, all_daily) %>%
 
 
 #rename old dataset, save new one
-file.rename("data/water_data_update.RDS", "data/water_data_update_old10-22.RDS")
+file.rename("data/water_data_update.RDS", "data/water_data_update_old10-22.RDS") #10.19.22
 saveRDS(water_data_update, "data/water_data_update.RDS")
 saveRDS(water_data_update, "app/data/water_data_update.RDS")
+
+
+
+# CSU Ross Lab Update 10/27/22 ------------------------------------------------------
+
+
+# test that site coords match between new and old datasets
+
+old_ross <- readRDS("data/water_data_update.RDS") %>% 
+  filter(source == "CSU_Ross") %>% 
+  distinct(Site, long, lat)
+
+
+new_ross <- read_csv("data/Poudre Portal Reservoir Chemistry/CPF_Reservoir_chemistry_up_to_083122.csv")
+
+new_ross_sites <- new_ross %>% distinct(Site, Lat, Long)
+# find dups
+new_ross_sites %>% group_by(Site) %>% summarise(n = n()) %>% filter(n > 1)
+# differing coords for long draw outlet and reservoir, peterson outlet, peterson reservoir, sleeping elephant
+
+
+
