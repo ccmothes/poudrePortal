@@ -150,6 +150,7 @@ h5.home {
   margin-right: 15%;
   margin-left: 15%;
   justify-content: center;
+  justify-items: center;
 }
 
 /* make cards adapt to colum on mobile */
@@ -159,6 +160,8 @@ h5.home {
     grid-template-columns: 1fr !important;
     padding: 1em;
     grid-row-gap: 10px;
+    justify-items: center;
+    justify-content: center;
   }
 }
 
