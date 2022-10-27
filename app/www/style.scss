@@ -227,7 +227,7 @@ h5.home {
 .row-researchers {
   display: grid;
  /* grid-column-gap: 8%; */
-  grid-template-columns: repeat(4, 1fr);
+  grid-template-columns: repeat(2, 1fr);
   flex-wrap: wrap;
   -webkit-flex-wrap: wrap;
   margin-right: 15%;
@@ -261,7 +261,7 @@ h5.home {
 
 /* make image fit to card */
 .img-researchers {
-  width: 80%;
+  width: 50%;
   border-radius: 100%;
   box-shadow: 0px 2px 4px 0px #02020280;
 }
