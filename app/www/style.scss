@@ -5,6 +5,10 @@
 }
 
 
+
+/* -------------------------------------------*/
+/* Homepage style */
+
 /* 'banner' image on homepage */
 .heading-container {
   display: flex;
@@ -29,7 +33,7 @@ img.fire-banner {
     width: 60vh;
     /*height: 20%;*/
     padding-left: 2%;
-    padding-top: 20%;
+    padding-top: 10%;
     justify-content: left;
 }
 
@@ -49,15 +53,15 @@ p.header-text {
 /* adapt font size on mobile */
 @media only screen and (max-width: 1145px) {
   h2.header-text {
-    font-size: 175% !important;
+    font-size: 155% !important;
   }
   
   p.header-text {
-    font-size: 120% !important;
+    font-size: 100% !important;
   }
   
   .foreground-content {
-    width: 60% !important;
+    width: 80% !important;
     padding-top: 0% !important;
   }
   
@@ -126,6 +130,7 @@ h5.home {
     font-weight: 500;
     margin: 10px;
     box-shadow: 8px 8px 8px 5px #0000006b;
+    width: 80%;
 }
 
 #button_data:hover, #button_weather:hover {
@@ -144,6 +149,7 @@ h5.home {
   -webkit-flex-wrap: wrap;
   margin-right: 15%;
   margin-left: 15%;
+  justify-content: center;
   justify-items: center;
 }
 
@@ -154,6 +160,8 @@ h5.home {
     grid-template-columns: 1fr !important;
     padding: 1em;
     grid-row-gap: 10px;
+    justify-items: center;
+    justify-content: center;
   }
 }
 
@@ -222,7 +230,7 @@ h5.home {
 .row-researchers {
   display: grid;
  /* grid-column-gap: 8%; */
-  grid-template-columns: repeat(4, 1fr);
+  grid-template-columns: repeat(2, 1fr);
   flex-wrap: wrap;
   -webkit-flex-wrap: wrap;
   margin-right: 15%;
@@ -256,7 +264,7 @@ h5.home {
 
 /* make image fit to card */
 .img-researchers {
-  width: 80%;
+  width: 50%;
   border-radius: 100%;
   box-shadow: 0px 2px 4px 0px #02020280;
 }
@@ -279,7 +287,14 @@ h5.home {
   transition: 0.7s;
 }
 
+/* ----------------------------------------------*/
+/* General site-wide style/
 
+
+/* color p text in weather app panel */
+p.p-sent {
+  color: black !important;
+}
 
 /* Make selection labels bold*/
 label.control-label {
