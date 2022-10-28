@@ -30,23 +30,17 @@
         <div class="col-data">
           <img class = "img-data" id = "img-usgs" src="usgs.png" alt="USGS Logo" />
           <p id = "p-usgs">USGS Hydrologic Data </p>
-          <button class="button-data" onclick="https://waterdata.usgs.gov/nwis">
-            Link to USGS water data
-          </button>
+          {{ button_usgs }}
         </div>
         <div class="col-data">
           <img class="img-data" id = "img-noaa" src="noaa.png" alt="NOAA Logo" />
           <p id = "p-noaa">NOAA Weather and Radar Data</p>
-          <button class="button-data" onclick="https://www.ncei.noaa.gov/cdo-web/">
-            Link to NOAA weather data
-          </button>
+          {{ button_noaa }}
         </div>
         <div class="col-data">
           <img class="img-data" id = "img-usda" src="usda.png" alt="USDA Logo" />
           <p id = "p-usda">USDA SNOTEL Station Data</p>
-          <button class="button-data" onclick="https://www.ncei.noaa.gov/cdo-web/">
-            Link to USDA SNOTEL data
-          </button>
+          {{ button_usda }}
         </div>
       </div>
      </div>
@@ -58,30 +52,23 @@
         <div class="col-researchers">
           <img class="img-researchers" src="ross.jpg" alt="Matthew Ross" />
           <br />
-          <button class="button-researchers" onclick="https://matthewrvross.com/">
-            Ross Lab @CSU
+         {{ button_ross }}
           </button>
         </div>
         <div class="col-researchers">
           <img class="img-researchers" src="kampf.jpg" alt="Stephanie Kampf" />
           <br />
-          <button class="button-researchers" onclick="https://www.nrel.colostate.edu/investigator/stephanie-kampf-homepage/">
-            Kampf Lab @CSU
-          </button>
+          {{ button_kampf }}
         </div>
         <div class="col-researchers">
           <img class="img-researchers" src="crhoades.jpg" alt="Charles C. Rhoades" />
           <br />
-          <button class="button-researchers" onclick="https://www.fs.usda.gov/rmrs/research-labs/fort-collins-biogeochemistry-laboratory">
-            Chuck Rhoades <br />USFS Biogeochemistry Lab
-          </button>
+          {{ button_rhoades }}
         </div>
         <div class="col-researchers">
           <img class="img-researchers" src="cofc.png" alt="City of Fort Collins" />
           <br />
-          <button class="button-researchers" onclick="https://www.fcgov.com/utilities/what-we-do/water/water-quality/source-water-monitoring/">
-            City of Fort Collins <br />Source Water Monitoring
-          </button>
+          {{ button_cofc }}
         </div>
       </div>
     </div>

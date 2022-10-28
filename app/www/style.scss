@@ -208,7 +208,7 @@ h5.home {
 
 
 /* edit buttons for data links */
-.button-data {
+#button_usgs, #button_noaa, #button_usda {
   border: 1px solid transparent;
   border-radius: 0.25rem;
   color: black;
@@ -219,7 +219,7 @@ h5.home {
   box-shadow: 8px 8px 8px 5px #0000006b;
 }
 
-.button-data:hover {
+#button_usga:hover, #button_noaa:hover, #button_usda:hover {
   background-color:#b1ac67;
   transition: 0.7s;
 }
@@ -270,7 +270,7 @@ h5.home {
 }
 
 /* edit resercher buttons */
-.button-researchers {
+#button_ross, #button_kampf, #button_rhoades, #button_cofc {
   border: 1px solid transparent;
   border-radius: 0.25rem;
   color: black;
@@ -282,7 +282,7 @@ h5.home {
 
 }
 
-.button-researchers:hover {
+#button_ross:hover, #button_kampf:hover, #button_rhoades:hover, #button_cofc:hover {
   background-color:#b1ac67;
   transition: 0.7s;
 }
@@ -347,6 +347,16 @@ div.info.legend.leaflet-control i{
 
 /* make sliders CSU green */
 .irs-from, .irs-to, .irs-bar, .irs-single {
+  background-color: #1E4D2B !important;
+  border: #1E4D2B !important;
+}
+
+/* make single sliders transparent before selection */
+.irs-bar.irs-bar--single {
+  opacity: 0% !important;
+}
+
+.irs-handle {
   background-color: #1E4D2B !important;
   border: #1E4D2B !important;
 }

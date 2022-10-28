@@ -258,12 +258,11 @@ site_meta <- readNWISsite(sites3) %>%
   )
 
 
-#test out
-
 #get daily data for discharge
 #NOTE on the map viewer, it shows gage ht is avail, but is not with this package
 #for some reason...
-x <- readNWISdv(sites3, "00060", "2021-01-01", Sys.Date())
+#UPDATED 10/28/22
+x <- readNWISdv(sites3, "00060", "2020-01-01", Sys.Date())
 
 
 #now join with meta to get coords
@@ -289,6 +288,17 @@ saveRDS(water_data, "data/water_data.RDS")
 #save updated version
 saveRDS(water_data, "data/water_data_update.RDS")
 saveRDS(water_data, "app/data/water_data_update.RDS")
+
+# UPDATES ------------------------------------------
+
+## USGS 10.28.22 -----------------------------------
+water_data <- readRDS("data/water_data_update.RDS") %>% 
+  filter(source != "USGS") %>% 
+  bind_rows(usgs_sites_refined)
+
+saveRDS(water_data, "data/water_data_update.RDS")
+saveRDS(water_data, "app/data/water_data_update.RDS")
+
 
 # test plotly -----------------------------------
 

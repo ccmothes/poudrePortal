@@ -38,210 +38,276 @@ dateToTimeList <- function(value){
 
 # ui ----------------------------------------------------
 
-ui <- fluidPage (class = "container-all",
+
+ui <- fluidPage (
+  class = "container-all",
   navbarPage(
-  theme = bslib::bs_theme(
-    bootswatch = "flatly",
-    version = 4,
-    #bg = "#FFFFFF",
-    #fg = "#000",
-    primary = "#1E4D2B",
-    secondary = "#D9782D",
-    success = "#f28e35",
-    base_font = font_google("Cairo")
-  ) %>% 
-    bslib::bs_add_rules(sass::sass_file("www/style.scss")),
-  
-  title = HTML("Poudre Portal <em>Beta Version</em>"),
-  # footer = div(class = "footer",
-  #              includeHTML("www/footer.html")),
-  #footer = tags$footer(includeHTML("www/footer.html")),
-  id = "nav",
-  
-  # Homepage ------------------------------------------------------------
-  tabPanel(
-    "Home",
-    htmlTemplate(
-      "www/homepage.html",
-      button_data = actionButton("button_data", "Data Explorer"),
-      button_weather = actionButton("button_weather", "Weather Explorer")
-    )
-  ),
-  # About --------------------------------------------------------------
-  tabPanel("About",
-           h5("Some about info regarding the project and researchers")
-  ),
-  
-  navbarMenu("Explore",
-  # Data Explorer ------------------------------------------------------          
-  tabPanel("Data Explorer",
-
-           fluidPage(
-             fluidRow(
-               column(5,
-                      tabsetPanel(
-                        tabPanel(
-                          "Map",
-                          leaflet::leafletOutput("map1", width = '100%' , height = 500)
-                      ),
-                      tabPanel("Table", div(DT::dataTableOutput("table"), style = "font-size:80%")
-                      )),
-               br(),
-               em("Click on a site to view time series plots to the right"),
-               hr(),
-               actionButton("clear", "Clear Plots"),
-               br(),
-               br(),
-               pickerInput("sourceChoice", "Filter by Source:",
-                          choices = c("CSU_Kampf", "CSU_Ross", "FoCo", "USFS", "USGS", "NOAA", "SNOTEL"),
-                          selected = c("CSU_Kampf", "CSU_Ross", "FoCo", "USFS", "USGS", "NOAA", "SNOTEL"),
-                          multiple = TRUE),
-               checkboxGroupButtons(
-                 inputId = "varChoice",
-                 label = "Filter by Category:",
-                 choices = c("Precipitation", "Snow", "Streamflow", "Water Quality", "Temperature"),
-                 selected = c("Precipitation", "Snow", "Streamflow", "Water Quality", "Temperature"),
-                 direction = "horizontal",
-                 individual = TRUE,
-                 status = "primary",
-                 checkIcon = list(
-                   yes = icon("square-check"),
-                   no = icon("square")
-                 ))
-
-               ),
-
-                column(7,
-                       fluidRow(
-                        sliderInput(
-                          "range",
-                          "",
-                          value = c(as.Date("2020-01-01"), as.Date("2021-10-01")),
-                          min = as.Date("2019-01-01"),
-                          max = as.Date("2022-02-01"),
-                          timezone = "-0600",
-                          width = '100%'
-                          
-                        ),
-                        #p(strong("Precipitation")),
-                        selectInput("precipVar",
-                                    "Precipitation/Snow",
-                                    choices = c(
-                                      "Precipitation",
-                                      "Snow Depth" = "Snow_depth",
-                                      "Snowfall"
-                                    )),
-                        plotlyOutput("precip", width = "100%", height = 160),
-                       
-                        selectInput(
-                          "tempVar",
-                          "Temperature",
-                          choices = c(
-                            "Average Temperature" = "Average_temp",
-                            "Minimum Temperature" = "Minimum_temp",
-                            "Maximum Temperature" = "Maximum_temp",
-                            "Soil Temperature" = "Soil_temp"
-                          )
-                        ),
-                        plotlyOutput("temp", width = "100%", height = 190),
-                        selectInput(
-                          "streamVar",
-                          "Streamflow",
-                          choices = c("Discharge" = "discharge_Ls",
-                                      "Stage" = "stage_cm")
-                        ),
-                        
-                        plotlyOutput("q", width = "100%", height = 190),
-                        selectInput(
-                          "qual",
-                          "Water Quality",
-                          choices = all_of(qual_vars),
-                          selected = "Turbidity"
-                          
-                        ),
-                        plotlyOutput("waterQual", width = "100%", height = 190),
-
-                        strong("Note: some data may be missing for certain dates/variables")
-
-                      )
-                )
-             ))),
-  # Weather Explorer -----------------------------------------------------------
-  tabPanel(
-    "Weather Explorer",
+    theme = bslib::bs_theme(
+      bootswatch = "flatly",
+      version = 4,
+      #bg = "#FFFFFF",
+      #fg = "#000",
+      primary = "#1E4D2B",
+      secondary = "#D9782D",
+      success = "#f28e35",
+      base_font = font_google("Cairo")
+    ) %>%
+      bslib::bs_add_rules(sass::sass_file("www/style.scss")),
     
-    sidebarLayout(
-      position = "right",
-      
-      mainPanel(leaflet::leafletOutput(
-        "map2", width = '100%' , height = 800
-      )),
-      sidebarPanel(
-        switchInput(inputId = "radarButton", label = "Radar", value = FALSE, inline = TRUE,
-                    onStatus = "success", offStatus = "danger"),
-        sliderInput(
-          "date",
-          label = "Observation Date:",
-          value = Sys.Date() - 1,
-          min = as.Date("2015-10-01"),
-          max = Sys.Date(),
-          dragRange = FALSE,
-          timezone = "-0600",
-          width = '100%'
-          
-        ),
+    title = HTML("Poudre Portal <em>Beta Version</em>"),
+    windowTitle = "Poudre Portal",
+    id = "nav",
+    
+    # Homepage ------------------------------------------------------------
+    tabPanel(
+      "Home",
+      htmlTemplate(
+        "www/homepage.html",
+        button_data = actionButton("button_data", "Data Explorer"),
+        button_weather = actionButton("button_weather", "Weather Explorer"),
+        button_usgs = actionButton("button_usgs", "USGS Water Data", onclick="window.open('https://waterdata.usgs.gov/nwis')"),
+        button_noaa = actionButton("button_noaa", "NOAA Weather Data", onclick="window.open('https://www.ncei.noaa.gov/cdo-web/')"),
+        button_usda = actionButton("button_usda", "USDA SNOTEL data", onclick="window.open('https://www.ncei.noaa.gov/cdo-web/')"),
+        button_ross = actionButton("button_ross", "Ross Lab @CSU", onclick="window.open('https://rossyndicate.com/')"),
+        button_kampf = actionButton("button_kampf", "Kampf Lab @CSU", onclick="window.open('https://www.nrel.colostate.edu/investigator/stephanie-kampf-homepage/')"),
+        button_rhoades = actionButton("button_rhoades", HTML("Chuck Rhoades <br> USFS Biogeochemistry Lab"), 
+                                      onclick="window.open('https://www.fs.usda.gov/rmrs/research-labs/fort-collins-biogeochemistry-laboratory')"),
+        button_cofc = actionButton("button_cofc", HTML("City of Fort Collins <br> Source Water Monitoring"),
+                                   onclick="window.open('https://www.fcgov.com/utilities/what-we-do/water/water-quality/source-water-monitoring/')")
         
-        sliderInput(
-          "time",
-          "Time (UTC):",
-          #value = strptime(format(Sys.time(), "%H:%M", tz = "GMT"), "%H:%M", tz = "GMT"),
-          value = strptime("12:00", "%H:%M", tz = "GMT"),
-          min = strptime("00:00", "%H:%M", tz = "GMT"),
-          max = strptime("23:59", "%H:%M", tz = "GMT"),
-          timeFormat = "%H:%M",
-          timezone = "GMT",
-          width = '100%',
-          step = 900, 
-          animate = animationOptions(interval = 3000, loop = TRUE)
-        ),
-        selectInput(
-          "variable",
-          "Weather Variable:",
-          choices = c(
-            "Precipitation",
-            "Snowfall",
-            "Snow Depth" = "Snow_depth",
-            "Minimum Temperature" = "Minimum_temp",
-            "Maximum Temperature" = "Maximum_temp",
-            "Average Temperature" = "Average_temp",
-            "Soil Temperature" = "Soil_temp"
-          )
-        ),
-        em("Click on a station to view raw values. Data last updated 1/25/22"),
-        br(),
-        br(),
-        pickerInput("studySites", "Study Sites:",
-                    choices = c("CSU_Kampf", "CSU_Ross", "FoCo", "USFS", "USGS"),
-                    selected = c("CSU_Kampf", "CSU_Ross", "FoCo", "USFS", "USGS"),
-                    multiple = TRUE),
-        hr(),
-        br(),
-        p(class = "p-sent", "Link to Sentinel Explorer", a(href="https://ccmothes.users.earthengine.app/view/poudreportal-gee", "here"), 
-          br(), em("(Note: this application is slow and still under development)"))
+        
+        
       )
-      
-    )
-  )
+    ),
+    # About --------------------------------------------------------------
+    tabPanel(
+      "About",
+      h5("Some about info regarding the project and researchers")
+    ),
+    
+    navbarMenu(
+      "Explore",
+      # Data Explorer ------------------------------------------------------
+      tabPanel("Data Explorer",
+               
+               fluidPage(fluidRow(
+                 column(
+                   5,
+                   tabsetPanel(
+                     tabPanel(
+                       "Map",
+                       leaflet::leafletOutput("map1", width = '100%' , height = 500)
+                     ),
+                     tabPanel("Table", div(DT::dataTableOutput("table"), style = "font-size:80%"))
+                   ),
+                   br(),
+                   em("Click on a site to view time series plots to the right"),
+                   hr(),
+                   actionButton("clear", "Clear Plots"),
+                   br(),
+                   br(),
+                   pickerInput(
+                     "sourceChoice",
+                     "Filter by Source:",
+                     choices = c(
+                       "CSU_Kampf",
+                       "CSU_Ross",
+                       "FoCo",
+                       "USFS",
+                       "USGS",
+                       "NOAA",
+                       "SNOTEL"
+                     ),
+                     selected = c(
+                       "CSU_Kampf",
+                       "CSU_Ross",
+                       "FoCo",
+                       "USFS",
+                       "USGS",
+                       "NOAA",
+                       "SNOTEL"
+                     ),
+                     multiple = TRUE
+                   ),
+                   checkboxGroupButtons(
+                     inputId = "varChoice",
+                     label = "Filter by Category:",
+                     choices = c(
+                       "Precipitation",
+                       "Snow",
+                       "Streamflow",
+                       "Water Quality",
+                       "Temperature"
+                     ),
+                     selected = c(
+                       "Precipitation",
+                       "Snow",
+                       "Streamflow",
+                       "Water Quality",
+                       "Temperature"
+                     ),
+                     direction = "horizontal",
+                     individual = TRUE,
+                     status = "primary",
+                     checkIcon = list(yes = icon("square-check"),
+                                      no = icon("square"))
+                   )
+                   
+                 ),
+                 
+                 column(
+                   7,
+                   fluidRow(
+                     sliderInput(
+                       "range",
+                       "",
+                       value = c(as.Date("2020-01-01"), as.Date("2021-10-01")),
+                       min = as.Date("2019-01-01"),
+                       max = as.Date("2022-02-01"),
+                       timezone = "-0600",
+                       width = '100%'
+                       
+                     ),
+                     #p(strong("Precipitation")),
+                     selectInput(
+                       "precipVar",
+                       "Precipitation/Snow",
+                       choices = c("Precipitation",
+                                   "Snow Depth" = "Snow_depth",
+                                   "Snowfall")
+                     ),
+                     plotlyOutput("precip", width = "100%", height = 160),
+                     
+                     selectInput(
+                       "tempVar",
+                       "Temperature",
+                       choices = c(
+                         "Average Temperature" = "Average_temp",
+                         "Minimum Temperature" = "Minimum_temp",
+                         "Maximum Temperature" = "Maximum_temp",
+                         "Soil Temperature" = "Soil_temp"
+                       )
+                     ),
+                     plotlyOutput("temp", width = "100%", height = 190),
+                     selectInput(
+                       "streamVar",
+                       "Streamflow",
+                       choices = c("Discharge" = "discharge_Ls",
+                                   "Stage" = "stage_cm")
+                     ),
+                     
+                     plotlyOutput("q", width = "100%", height = 190),
+                     selectInput(
+                       "qual",
+                       "Water Quality",
+                       choices = all_of(qual_vars),
+                       selected = "Turbidity"
+                       
+                     ),
+                     plotlyOutput("waterQual", width = "100%", height = 190),
+                     
+                     strong("Note: some data may be missing for certain dates/variables"),
+                     br(),
+                     br()
+                     
+                   )
+                 )
+               ))),
+      # Weather Explorer -----------------------------------------------------------
+      tabPanel(
+        "Weather Explorer",
+        
+        sidebarLayout(
+          position = "right",
+          
+          mainPanel(leaflet::leafletOutput(
+            "map2", width = '100%' , height = 800
+          )),
+          sidebarPanel(
+            switchInput(
+              inputId = "radarButton",
+              label = "Radar",
+              value = FALSE,
+              inline = TRUE,
+              onStatus = "success",
+              offStatus = "danger"
+            ),
+            sliderInput(
+              "date",
+              label = "Observation Date:",
+              value = Sys.Date() - 1,
+              min = as.Date("2015-10-01"),
+              max = Sys.Date(),
+              dragRange = FALSE,
+              timezone = "-0600",
+              width = '100%'
+              
+            ),
+            
+            sliderInput(
+              "time",
+              "Time (UTC):",
+              #value = strptime(format(Sys.time(), "%H:%M", tz = "GMT"), "%H:%M", tz = "GMT"),
+              value = strptime("12:00", "%H:%M", tz = "GMT"),
+              min = strptime("00:00", "%H:%M", tz = "GMT"),
+              max = strptime("23:59", "%H:%M", tz = "GMT"),
+              timeFormat = "%H:%M",
+              timezone = "GMT",
+              width = '100%',
+              step = 900,
+              animate = animationOptions(interval = 3000, loop = TRUE)
+            ),
+            selectInput(
+              "variable",
+              "Weather Variable:",
+              choices = c(
+                "Precipitation",
+                "Snowfall",
+                "Snow Depth" = "Snow_depth",
+                "Minimum Temperature" = "Minimum_temp",
+                "Maximum Temperature" = "Maximum_temp",
+                "Average Temperature" = "Average_temp",
+                "Soil Temperature" = "Soil_temp"
+              )
+            ),
+            em("Click on a station to view raw values. Data last updated 1/25/22"),
+            br(),
+            br(),
+            pickerInput(
+              "studySites",
+              "Study Sites:",
+              choices = c("CSU_Kampf", "CSU_Ross", "FoCo", "USFS", "USGS"),
+              selected = c("CSU_Kampf", "CSU_Ross", "FoCo", "USFS", "USGS"),
+              multiple = TRUE
+            ),
+            hr(),
+            br(),
+            p(
+              class = "p-sent",
+              "Link to Sentinel Explorer",
+              a(href = "https://ccmothes.users.earthengine.app/view/poudreportal-gee", "here"),
+              br(),
+              em("(Note: this application is slow and still under development)")
+            )
+          )
+          
+        )
+      )
+    ),
+    # Fire Stories ---------------------------------------------------------------
+    tabPanel(
+      "Fire Stories",
+      h5("Stories, articles, resources etc. related to Colorado wildfires")
+    ),
+    # Contact --------------------------------------------------------------------
+    tabPanel("Contact",
+             h5("Contact info here"))
   ),
-  # Fire Stories ---------------------------------------------------------------
-  tabPanel("Fire Stories",
-           h5("Stories, articles, resources etc. related to Colorado wildfires")),
-  # Contact --------------------------------------------------------------------
-  tabPanel("Contact",
-           h5("Contact info here"))
-),
-tags$footer(includeHTML("www/footer.html"))
+  tags$footer(includeHTML("www/footer.html"))
 )
+
+
+
 
 
 server <-  function(input, output, session){
