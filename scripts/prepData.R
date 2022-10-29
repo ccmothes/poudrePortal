@@ -15,7 +15,7 @@ weather_data <- readRDS("app/data/weather_update.RDS") %>%
 
 qual_vars <- c("water_temp_C", "Chla", "Turbidity", "Conductivity", "DOC", "DTN", "pH",
                "ANC", "SC", "Na", "NH4", "K", "Mg", "Ca", "F", "Cl",
-               "NO3", "PO4", "SO4")
+               "NO3", "PO4", "SO4", "TSS")
 
 #read in updated file
 water_data <- readRDS("app/data/water_data_update.RDS") %>% arrange(Date) %>% 
