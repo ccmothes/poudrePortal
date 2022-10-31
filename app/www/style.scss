@@ -1,7 +1,23 @@
 /* styling for Poudre Portal */
 
+/*set up container for footer */
 .container-all {
   padding: 0px;
+  position: relative;
+  min-height: 100vh;
+  padding-bottom: 25rem;
+}
+
+/* edit footer for mobile */
+@media only screen and (max-width: 768px) {
+  .container-all {
+    padding-bottom: 600px !important;
+  }
+  
+  .site-footer {
+    height: 600px !important;
+  }
+
 }
 
 
@@ -30,35 +46,42 @@ img.fire-banner {
 .foreground-content {
     position: absolute;
     /*top: 20%; */
-    width: 60vh;
+    width: 70vh;
     /*height: 20%;*/
     padding-left: 2%;
-    padding-top: 10%;
+    padding-top: 25%;
     justify-content: left;
 }
 
 
 h2.header-text {
   color: white;
-  font-size: 275%;
+  font-size: 300%;
   text-shadow: 2px 2px 1px #000000;
+}
+
+.heading-about {
+  text-align: center;
+  padding-left: 10%;
+  padding-right: 10%;
 }
 
 p.header-text {
   color: #f28e35;
-  font-size: 150%;
-  text-shadow: 2px 2px 1px #00000063;
+  font-size: 20px;
+  letter-spacing: 1.2px;
+  text-shadow: 1px 1px 1px #00000063;
 }
 
 /* adapt font size on mobile */
 @media only screen and (max-width: 1145px) {
   h2.header-text {
-    font-size: 155% !important;
+    font-size: 180% !important;
   }
   
-  p.header-text {
+  /*p.header-text {
     font-size: 100% !important;
-  }
+  }*/
   
   .foreground-content {
     width: 80% !important;
@@ -376,6 +399,9 @@ div.info.legend.leaflet-control i{
 
 /* footer styling */
 .site-footer {
+  position: absolute;
+  bottom: 0;
+  width: 100%;
   background-color:#1E4D2B;
   padding:45px 0 20px;
   font-size:15px;

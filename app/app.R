@@ -82,7 +82,8 @@ ui <- fluidPage (
     # About --------------------------------------------------------------
     tabPanel(
       "About",
-      h5("Some about info regarding the project and researchers")
+      h3("Under construction"),
+      h5("This page will contain information regarding the project and researchers")
     ),
     
     navbarMenu(
@@ -161,9 +162,9 @@ ui <- fluidPage (
                      sliderInput(
                        "range",
                        "",
-                       value = c(as.Date("2020-01-01"), as.Date("2021-10-01")),
+                       value = c(as.Date("2020-01-01"), as.Date("2022-09-01")),
                        min = as.Date("2019-01-01"),
-                       max = as.Date("2022-02-01"),
+                       max = as.Date("2022-09-01"),
                        timezone = "-0600",
                        width = '100%'
                        
@@ -270,7 +271,7 @@ ui <- fluidPage (
                 "Soil Temperature" = "Soil_temp"
               )
             ),
-            em("Click on a station to view raw values. Data last updated 1/25/22"),
+            em("Click on a station to view raw values. Data last updated 10/20/22"),
             br(),
             br(),
             pickerInput(
@@ -297,11 +298,17 @@ ui <- fluidPage (
     # Fire Stories ---------------------------------------------------------------
     tabPanel(
       "Fire Stories",
-      h5("Stories, articles, resources etc. related to Colorado wildfires")
+      h3("Under construction"),
+      h5("This page will host Stories, articles, resources etc. related to Colorado wildfires")
     ),
     # Contact --------------------------------------------------------------------
     tabPanel("Contact",
-             h5("Contact info here"))
+             h3("We want your data!"),
+             h5("If you'd like to contribute to this effort, or have any questions reagrding this project,
+                please reach out to:"),
+             h5("Caitlin Mothes, ccmothes@colostate.edu")
+    )
+    
   ),
   tags$footer(includeHTML("www/footer.html"))
 )
